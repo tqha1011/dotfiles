@@ -323,6 +323,7 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- Bind super F to maximize window
 hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = 1 }))
 hl.bind("SUPER + L", hl.dsp.exec_cmd("hyprlock"))
+hl.bind("SUPER + Escape", hl.dsp.exec_cmd("wlogout"))
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
