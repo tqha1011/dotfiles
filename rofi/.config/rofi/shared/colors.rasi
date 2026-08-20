@@ -1,0 +1,9 @@
+/* TokyoNight Night — dùng chung cho mọi theme rofi trong repo (@import "shared/colors.rasi") */
+* {
+    background:     #1a1b26;   /* bg */
+    background-alt: #292e42;   /* bg_highlight — nền ô nhập, dòng alternate */
+    foreground:     #c0caf5;   /* fg */
+    selected:       #7aa2f7;   /* blue — dòng/ô đang chọn */
+    urgent:         #f7768e;   /* red */
+    active:         #e0af68;   /* yellow/orange */
+}

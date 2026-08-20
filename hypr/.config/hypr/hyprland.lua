@@ -44,7 +44,7 @@ hl.monitor({
 ---------------------
 
 -- Set programs that you use
-local terminal    = "kitty"
+local terminal    = "ghostty"
 local fileManager = "dolphin"
 local menu        = "hyprlauncher"
 
@@ -330,7 +330,8 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = 1 }))
 hl.bind("SUPER + L", hl.dsp.exec_cmd("hyprlock"))
 hl.bind("SUPER + Escape", hl.dsp.exec_cmd("wlogout"))
-hl.bind("SUPER + W", hl.dsp.exec_cmd("waypaper"))
+hl.bind("SUPER + W", hl.dsp.exec_cmd("~/.config/hypr/scripts/wallpaper-picker-rofi.sh"))
+hl.bind("SHIFT + F", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/launcher.rasi"))
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------

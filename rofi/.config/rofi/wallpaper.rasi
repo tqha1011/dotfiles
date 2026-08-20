@@ -1,0 +1,87 @@
+/* Wallpaper picker theme - TokyoNight Night */
+
+* {
+    bg-col:       #1a1b26;
+    bg-col-light: #292e42;
+    border-col:   #7aa2f7;
+    selected-col: #292e42;
+    blue:         #7aa2f7;
+    fg-col:       #c0caf5;
+    grey:         #414868;
+
+    font: "JetBrainsMono Nerd Font 12";
+}
+
+window {
+    width: 800px;
+    height: 320px;
+    border: 3px;
+    border-color: @border-col;
+    background-color: @bg-col;
+    border-radius: 16px;
+}
+
+mainbox {
+    background-color: @bg-col;
+    children: [inputbar, listview];
+}
+
+inputbar {
+    children: [prompt, entry];
+    background-color: @bg-col;
+    border-radius: 8px;
+    margin: 20px 20px 0px 20px;
+}
+
+prompt {
+    background-color: @blue;
+    text-color: @bg-col;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+entry {
+    padding: 6px 10px;
+    margin: 0px 0px 0px 10px;
+    text-color: @fg-col;
+    background-color: @bg-col-light;
+    border-radius: 6px;
+    placeholder: "Search wallpaper...";
+}
+
+listview {
+    layout: horizontal;
+    lines: 4;
+    cycle: true;
+    spacing: 16px;
+    padding: 20px;
+    background-color: @bg-col;
+}
+
+element {
+    orientation: vertical;
+    padding: 8px;
+    background-color: @bg-col;
+    text-color: @fg-col;
+    border-radius: 12px;
+}
+
+element-icon {
+    size: 140px;
+    horizontal-align: 0.5;
+    border-radius: 8px;
+}
+
+element-text {
+    horizontal-align: 0.5;
+    vertical-align: 0.5;
+    margin: 6px 0px 0px 0px;
+}
+
+element selected {
+    background-color: @selected-col;
+    text-color: @blue;
+    border: 2px;
+    border-color: @blue;
+    border-radius: 12px;
+}

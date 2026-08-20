@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 
 WALLPAPER_DIR="$HOME/.local/share/wallpapers"
+THUMB_DIR="$HOME/.cache/wallpaper-thumbs"
+
+mkdir -p "$THUMB_DIR"
 
 chosen=$(for wall in "$WALLPAPER_DIR"/*.{jpg,jpeg,png,webp}; do
     [ -e "$wall" ] || continue
     name=$(basename "$wall")
-    echo -en "${name}\0icon\x1f${wall}\n"
+    thumb="$THUMB_DIR/$name"
+    if [ ! -e "$thumb" ] || [ "$wall" -nt "$thumb" ]; then
+        magick "$wall" -resize 256x256 "$thumb"
+    fi
+    echo -en "${name}\0icon\x1f${thumb}\n"
 done | rofi -dmenu -show-icons -p "Wallpaper" -theme ~/.config/rofi/wallpaper.rasi)
 
 [ -z "$chosen" ] && exit 0
