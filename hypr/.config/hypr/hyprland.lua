@@ -58,11 +58,17 @@ local menu        = "hyprlauncher"
 -- Autostart necessary processes (like notifications daemons, status bars, etc.)
 -- Or execute your favorite apps at launch like this:
 --
--- hl.on("hyprland.start", function () 
---   hl.exec_cmd(terminal)
---   hl.exec_cmd("nm-applet")
---   hl.exec_cmd("waybar & hyprpaper & firefox")
--- end)
+
+-- start brave
+hl.on("hyprland.start", function () 
+  hl.exec_cmd("brave")
+end)
+
+-- start swww
+hl.on("hyprland.start", function ()
+    hl.exec_cmd("swww-daemon")
+    hl.exec_cmd("swww img ~/.local/share/wallpapers/chainsaw-man.jpg --transition-type wipe --transition-duration 1.5")
+end)
 
 
 -------------------------------
@@ -324,6 +330,7 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = 1 }))
 hl.bind("SUPER + L", hl.dsp.exec_cmd("hyprlock"))
 hl.bind("SUPER + Escape", hl.dsp.exec_cmd("wlogout"))
+hl.bind("SUPER + W", hl.dsp.exec_cmd("waypaper"))
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
