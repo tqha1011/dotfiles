@@ -1,6 +1,7 @@
 {
   "Lua.workspace.library": ["/usr/share/hypr/stubs"],
   "files.associations": {
-    "**/ghostty/**/config": "properties"
+    "**/ghostty/**/config": "properties",
+    "**/*.jsonc": "jsonc"
   }
 }
