@@ -34,8 +34,8 @@ format = '[ $symbol$branch]($style)'
 [git_status]
 format = "[$untracked$staged$modified$renamed$conflicted$ahead_behind ]($style)"
 # options available for format
-staged     = "[+](green)"
-modified   = "[!](yellow)"
+staged     = "[+$count](green)"
+modified   = "[!$count](yellow)"
 renamed    = "[»](blue)"
 deleted    = "[-](red)"
 untracked  = "[?](red)"
