@@ -20,13 +20,13 @@ error_symbol = '[✗](bold red)'
 
 [directory]
 style = 'bold sapphire'
-truncation_length = 15
+truncation_length = 20
 truncate_to_repo = true
 format = '[ $path]($style)[$read_only]($read_only_style)'
 
 [git_branch]
 symbol = '🌱 '
-truncation_length = 15
+truncation_length = 20
 truncation_symbol = ''
 style = 'bold lavender'
 format = '[ $symbol$branch]($style)'
