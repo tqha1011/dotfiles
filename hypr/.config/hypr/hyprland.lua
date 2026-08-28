@@ -71,7 +71,7 @@ end)
 
 -- start the waybar
 hl.on("hyprland.start", function ()
-    hl.exec_cmd("waybar")  
+    hl.exec_cmd("fc-cache -f && waybar")
 end)
 
 
