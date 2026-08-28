@@ -3,5 +3,6 @@
   "files.associations": {
     "**/ghostty/**/config": "properties",
     "**/*.jsonc": "jsonc"
-  }
+  },
+  "css.lint.unknownAtRules": "ignore"
 }
