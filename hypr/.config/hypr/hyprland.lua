@@ -66,8 +66,7 @@ end)
 
 -- start swww
 hl.on("hyprland.start", function ()
-    hl.exec_cmd("swww-daemon")
-    hl.exec_cmd("swww img ~/.local/share/wallpapers/chainsaw-man.jpg --transition-type wipe --transition-duration 1.5")
+    hl.exec_cmd("awww-daemon & sleep 1 && awww img ~/.local/share/wallpapers/chainsaw-man.jpg --transition-type wipe --transition-duration 1.5")
 end)
 
 
@@ -331,7 +330,7 @@ hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = 1 }))
 hl.bind("SUPER + L", hl.dsp.exec_cmd("hyprlock"))
 hl.bind("SUPER + Escape", hl.dsp.exec_cmd("wlogout"))
 hl.bind("SUPER + W", hl.dsp.exec_cmd("~/.config/hypr/scripts/wallpaper-picker-rofi.sh"))
-hl.bind("SHIFT + F", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/launcher.rasi"))
+hl.bind("Space + F", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/launcher.rasi"))
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
