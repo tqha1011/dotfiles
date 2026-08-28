@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/fastfetch-cli/fastfetch/dev/doc/json_schema.json",
   "logo": {
-    "type": "file",
-    "source": "~/.local/share/ascii/logo.txt",
+    "type": "kitty",
+    "source": "~/.local/share/ascii/chainsawman-logo2.png",
     "color": {
       "1": "bright_",
     },
@@ -10,6 +10,8 @@
       "top": 2,
       "right": 3,
     },
+    "width": 20,
+    "height": 15,
   },
   "display": {
     "separator": " ",

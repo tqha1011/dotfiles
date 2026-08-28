@@ -69,6 +69,11 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("awww-daemon & sleep 1 && awww img ~/.local/share/wallpapers/chainsaw-man.jpg --transition-type wipe --transition-duration 1.5")
 end)
 
+-- start the waybar
+hl.on("hyprland.start", function ()
+    hl.exec_cmd("waybar")  
+end)
+
 
 -------------------------------
 ---- ENVIRONMENT VARIABLES ----
