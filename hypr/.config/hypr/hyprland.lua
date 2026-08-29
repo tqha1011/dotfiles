@@ -59,11 +59,6 @@ local menu        = "hyprlauncher"
 -- Or execute your favorite apps at launch like this:
 --
 
--- start brave
-hl.on("hyprland.start", function () 
-  hl.exec_cmd("brave")
-end)
-
 -- start swww
 hl.on("hyprland.start", function ()
     hl.exec_cmd("awww-daemon & sleep 1 && awww img ~/.local/share/wallpapers/chainsaw-man.jpg --transition-type wipe --transition-duration 1.5")
