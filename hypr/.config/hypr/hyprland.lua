@@ -69,6 +69,10 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("fc-cache -f && waybar")
 end)
 
+-- start the fcitx-5
+hl.on("hyprland.start", function ()
+    hl.exec_cmd("fcitx5 -d")
+end)
 
 -------------------------------
 ---- ENVIRONMENT VARIABLES ----
