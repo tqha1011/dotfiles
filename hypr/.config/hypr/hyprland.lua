@@ -61,7 +61,11 @@ local menu        = "hyprlauncher"
 
 -- start swww
 hl.on("hyprland.start", function ()
-    hl.exec_cmd("awww-daemon & sleep 1 && awww img ~/.local/share/wallpapers/chainsaw-man.jpg --transition-type wipe --transition-duration 1.5")
+    hl.exec_cmd([[
+        awww-daemon &
+        while ! awww query >/dev/null 2>&1; do sleep 0.05; done
+        awww img ~/.local/share/wallpapers/chainsaw-man.jpg --transition-type wipe --transition-duration 0.5
+    ]])
 end)
 
 -- start the waybar
