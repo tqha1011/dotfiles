@@ -77,6 +77,11 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("nm-applet")
 end)
 
+-- start the hyprpolkit agent
+hl.on("hyprland.start", function()
+    hl.exec_cmd("hyprpolkitagent")
+end)
+
 -- start the waybar
 hl.on("hyprland.start", function()
     hl.exec_cmd("fc-cache -f && waybar")
