@@ -72,6 +72,11 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("blueman-applet")
 end)
 
+-- start network-applet
+hl.on("hyprland.start", function()
+    hl.exec_cmd("nm-applet")
+end)
+
 -- start the waybar
 hl.on("hyprland.start", function()
     hl.exec_cmd("fc-cache -f && waybar")
