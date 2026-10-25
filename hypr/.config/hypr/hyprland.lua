@@ -159,7 +159,7 @@ hl.env("GTK_THEME", "Breeze-Dark") -- GTK4 trên Wayland lấy theme qua portal 
 -- Màu viền do theme-render.py sinh ra (colors.lua); fallback TokyoNight nếu chưa render lần nào
 local okTheme, theme = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/colors.lua")
 if not okTheme then
-    theme = { active = { "rgba(7aa2f7ee)", "rgba(bb9af7ee)" }, inactive = "rgba(414868aa)" }
+    theme = { active = { "rgba(7aa2f7ee)", "rgba(bb9af7ee)" }, inactive = "rgba(414868aa)", background = "rgb(1a1b26)" }
 end
 
 -- Refer to https://wiki.hypr.land/Configuring/Basics/Variables/
@@ -194,9 +194,11 @@ hl.config({
 
         shadow           = {
             enabled      = true,
-            range        = 4,
+            -- Bóng mềm, rộng, lệch xuống: cửa sổ nổi (pavucontrol, blueman…) có chiều sâu thay vì dán phẳng
+            range        = 18,
             render_power = 3,
-            color        = 0xee1a1a1a,
+            offset       = { 0, 6 },
+            color        = "rgba(00000059)",
         },
 
         -- Kính mờ thật cho waybar, rofi, dunst, wlogout (layer rules): đủ mạnh để chữ phía sau không đọc được
@@ -220,6 +222,8 @@ hl.curve("easeInOutCubic", { type = "bezier", points = { { 0.65, 0.05 }, { 0.36,
 hl.curve("linear", { type = "bezier", points = { { 0, 0 }, { 1, 1 } } })
 hl.curve("almostLinear", { type = "bezier", points = { { 0.5, 0.5 }, { 0.75, 1 } } })
 hl.curve("quick", { type = "bezier", points = { { 0.15, 0 }, { 0.1, 1 } } })
+-- Đóng/biến mất: tăng tốc dần rồi đi hẳn (ngược với easeOutQuint lúc xuất hiện)
+hl.curve("easeInQuart", { type = "bezier", points = { { 0.5, 0 }, { 0.75, 0 } } })
 
 -- Default springs
 hl.curve("easy", { type = "spring", mass = 1, stiffness = 238.1191, dampening = 24.21279333 })
@@ -228,13 +232,13 @@ hl.animation({ leaf = "global", enabled = true, speed = 10, bezier = "default" }
 hl.animation({ leaf = "border", enabled = true, speed = 5.39, bezier = "easeOutQuint" })
 hl.animation({ leaf = "windows", enabled = true, speed = 4.79, spring = "easy" })
 hl.animation({ leaf = "windowsIn", enabled = true, speed = 4.1, spring = "easy", style = "popin 92%" })
-hl.animation({ leaf = "windowsOut", enabled = true, speed = 1.49, bezier = "linear", style = "popin 87%" })
+hl.animation({ leaf = "windowsOut", enabled = true, speed = 1.6, bezier = "easeInQuart", style = "popin 92%" }) -- đối xứng với windowsIn
 hl.animation({ leaf = "fadeIn", enabled = true, speed = 1.73, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeOut", enabled = true, speed = 1.46, bezier = "almostLinear" })
 hl.animation({ leaf = "fade", enabled = true, speed = 3.03, bezier = "quick" })
 hl.animation({ leaf = "layers", enabled = true, speed = 3.81, bezier = "easeOutQuint" })
 hl.animation({ leaf = "layersIn", enabled = true, speed = 4, bezier = "easeOutQuint", style = "fade" })
-hl.animation({ leaf = "layersOut", enabled = true, speed = 1.5, bezier = "linear", style = "fade" })
+hl.animation({ leaf = "layersOut", enabled = true, speed = 1.5, bezier = "easeInQuart", style = "fade" })
 hl.animation({ leaf = "fadeLayersIn", enabled = true, speed = 1.79, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.39, bezier = "almostLinear" })
 -- Workspace trượt theo hướng di chuyển, cùng nhịp easeOutQuint ~300ms với vạch workspace trên waybar
@@ -289,8 +293,11 @@ hl.config({
 
 hl.config({
     misc = {
-        force_default_wallpaper = -1,    -- Set to 0 or 1 to disable the anime mascot wallpapers
-        disable_hyprland_logo   = false, -- If true disables the random hyprland logo / anime girl background. :(
+        -- Không hiện mascot/logo trong tích tắc trước khi awww tải wallpaper: chỉ nền bg của bảng màu,
+        -- để SDDM → desktop liền một màu
+        force_default_wallpaper = 0,
+        disable_hyprland_logo   = true,
+        background_color        = theme.background,
     },
 })
 

@@ -2,4 +2,5 @@
 return {
     active   = { "rgba({{accent.hex}}ee)", "rgba({{accent2.hex}}ee)" },
     inactive = "rgba({{border.hex}}aa)",
+    background = "rgb({{bg.hex}})",
 }
