@@ -1,0 +1,64 @@
+# Plymouth script theme: nền TokyoNight, 5 chấm — chấm đang "active" giãn thành vạch xanh, chạy vòng
+# như chấm workspace trên waybar. Thông báo hệ thống (fsck…) hiện mờ ở dưới.
+
+Window.SetBackgroundTopColor(0.102, 0.106, 0.149);    # #1a1b26
+Window.SetBackgroundBottomColor(0.102, 0.106, 0.149);
+
+dot = Image("dot.png");
+bar = Image("bar.png");
+count = 5;
+gap = 12;
+step_frames = 15;   # ~300ms mỗi bước ở 50 fps — cùng nhịp với animation của desktop
+
+total = (count - 1) * dot.GetWidth() + bar.GetWidth() + (count - 1) * gap;
+left = Window.GetX() + Window.GetWidth() / 2 - total / 2;
+middle = Window.GetY() + Window.GetHeight() / 2;
+
+for (i = 0; i < count; i++)
+    slots[i] = Sprite(dot);
+
+frame = 0;
+
+fun layout(active) {
+    x = left;
+    for (i = 0; i < count; i++) {
+        if (i == active) image = bar; else image = dot;
+        slots[i].SetImage(image);
+        slots[i].SetPosition(x, middle - image.GetHeight() / 2, 1);
+        x += image.GetWidth() + gap;
+    }
+}
+
+fun refresh() {
+    layout(Math.Int(frame / step_frames) % count);
+    frame++;
+}
+
+Plymouth.SetRefreshFunction(refresh);
+layout(0);
+
+# ---- Thông báo (fsck, lỗi…) ----
+message = Sprite();
+fun show_message(text) {
+    image = Image.Text(text, 0.337, 0.373, 0.537, 1, "Inter 11");   # #565f89
+    message.SetImage(image);
+    message.SetPosition(Window.GetX() + Window.GetWidth() / 2 - image.GetWidth() / 2,
+                        Window.GetY() + Window.GetHeight() * 0.85, 2);
+}
+Plymouth.SetMessageFunction(show_message);
+
+# ---- Ổ mã hóa (phòng khi sau này bật LUKS): hiện lời nhắc + số ký tự đã gõ ----
+prompt = Sprite();
+fun display_password(text, bullets) {
+    dots = "";
+    for (i = 0; i < bullets; i++) dots += "•";
+    image = Image.Text(text + "  " + dots, 0.753, 0.792, 0.961, 1, "Inter 12");   # #c0caf5
+    prompt.SetImage(image);
+    prompt.SetPosition(Window.GetX() + Window.GetWidth() / 2 - image.GetWidth() / 2, middle + 60, 2);
+}
+Plymouth.SetDisplayPasswordFunction(display_password);
+
+fun display_normal() {
+    prompt.SetImage(Image.Text("", 0, 0, 0, 0));
+}
+Plymouth.SetDisplayNormalFunction(display_normal);

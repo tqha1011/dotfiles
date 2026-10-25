@@ -20,4 +20,4 @@ done | rofi -dmenu -show-icons -p "Wallpaper" -theme ~/.config/rofi/wallpaper.ra
 chosen_path="$WALLPAPER_DIR/$chosen"
 [ -f "$chosen_path" ] || exit 1
 
-awww img "$chosen_path" --transition-type wipe --transition-duration 1.5
+"$HOME/.config/hypr/scripts/set-wallpaper.sh" "$chosen_path"

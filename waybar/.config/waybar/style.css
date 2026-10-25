@@ -1,70 +1,175 @@
-@define-color highlight rgba(117, 241, 250, 1);
-@define-color dark-9 rgba(24, 24, 27, 0.3);
-@define-color dark-8 rgba(39, 39, 42, 1);
-@define-color dark-7 rgba(63, 63, 70, 1);
-@define-color dark-6 rgba(82, 82, 91, 1);
-@define-color dark-5 rgba(113, 113, 122, 1);
+/* Màu: colors.css do hypr/scripts/theme-render.py sinh ra (TokyoNight hoặc theo wallpaper — theme-mode) */
+@import url("colors.css");
+
+/* Nhịp chuyển động chung với Hyprland: easeOutQuint, ~300ms (= speed 3) */
 
 * {
   /* `otf-font-awesome` is required to be installed for icons */
-  font-family: JetbrainsMono Nerd Font Propo;
-  font-size: 15px;
+  font-family: "JetBrainsMono Nerd Font Propo";
+  font-size: 13px;
+  min-height: 0;
 }
 
 window#waybar {
-  background-color: @dark-9;
-  color: #ffffff;
-  transition-property: background-color;
-  transition-duration: 0.5s;
+  background: transparent;
+  color: @fg;
+}
+
+/* ---- Islands ---- */
+
+.modules-left,
+.modules-center,
+.modules-right {
+  background: alpha(@bg, 0.85);
+  border: 1px solid alpha(@surface, 0.9);
+  border-radius: 10px;
+  padding: 0 6px;
+  transition: background-color 300ms cubic-bezier(0.23, 1, 0.32, 1),
+    border-color 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Workspace trống: không có title → ẩn island giữa */
+window#waybar.empty .modules-center {
+  background: transparent;
+  border-color: transparent;
+}
+
+/* ---- Workspaces: chấm, active giãn thành vạch ---- */
+
+#workspaces {
+  margin: 0 4px;
 }
 
 #workspaces button {
-  padding: 3px;
-  margin: 7px 0px 7px 7px;
-  background: transparent;
-  border-radius: 2px;
-  color: white;
+  min-width: 8px;
+  min-height: 8px;
+  padding: 0;
+  margin: 12px 3px;
+  border: none;
+  border-radius: 99px;
+  box-shadow: none;
+  background: @muted;
+  transition: min-width 300ms cubic-bezier(0.23, 1, 0.32, 1),
+    background-color 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Nhãn rỗng vẫn giữ chiều cao dòng của `*` (13px) → thu nhỏ để nút thành chấm 8px */
+#workspaces button label {
+  font-size: 1px;
+}
+
+#workspaces button.empty {
+  background: alpha(@muted, 0.45);
+}
+
+#workspaces button:hover {
+  background: @fg;
 }
 
 #workspaces button.active {
-  background: @highlight;
-  color: black;
-  font-weight: 700;
+  min-width: 28px;
+  background: @accent;
 }
 
 #workspaces button.urgent {
-  background-color: rgba(227, 81, 73, 1);
+  background: @red;
 }
 
-#submap,
-#battery,
-#bluetooth,
-#network,
+#submap {
+  margin-left: 6px;
+  padding: 0 8px;
+  color: @yellow;
+}
+
+/* ---- Window title ---- */
+
+#window {
+  padding: 0 10px;
+}
+
+#window image {
+  margin-right: 6px;
+}
+
+/* ---- Modules (không có nền riêng, tách bằng khoảng trắng) ---- */
+
 #cpu,
-#memory,
+#pulseaudio,
+#network,
+#bluetooth,
+#battery,
 #clock,
-#group-power,
-#volume {
-  border-radius: 8px;
-  padding: 5px 8px;
-  background: @dark-8;
-  margin: 5px 10px 5px 0px;
+#custom-power,
+#custom-quit,
+#custom-lock,
+#custom-reboot {
+  padding: 0 8px;
+  margin: 4px 0;
+  border-radius: 6px;
+  color: @fg;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
 }
 
-/* define status bluetooth */
-#bluetooth.on {
-  background-color: @highlight;
-  color: black;
+#cpu:hover,
+#pulseaudio:hover,
+#network:hover,
+#bluetooth:hover,
+#battery:hover,
+#clock:hover,
+#custom-power:hover,
+#custom-quit:hover,
+#custom-lock:hover,
+#custom-reboot:hover {
+  background: @surface;
 }
 
-#bluetooth.off {
-  background-color: @dark-8;
+#clock {
+  font-weight: 600;
 }
+
+/* ---- Trạng thái: màu chỉ xuất hiện khi có điều cần biết ---- */
+
+#cpu.warning,
+#battery.warning:not(.charging) {
+  color: @yellow;
+}
+
+#cpu.critical,
+#network.disconnected {
+  color: @red;
+}
+
+#battery.charging {
+  color: @green;
+}
+
+@keyframes battery-critical {
+  to {
+    color: @bg;
+    background-color: @red;
+  }
+}
+
+#battery.critical:not(.charging) {
+  color: @red;
+  animation: battery-critical 1s ease-in-out infinite alternate;
+}
+
+#pulseaudio.muted,
+#bluetooth.off,
+#network.disabled {
+  color: @muted;
+}
+
+#bluetooth.connected {
+  color: @accent;
+}
+
+/* ---- Volume slider (drawer) ---- */
 
 #pulseaudio-slider {
-  padding: 0px;
-  margin: 0px;
-  margin-left: 4px;
+  padding: 0;
+  margin: 0 6px 0 2px;
 }
 
 #pulseaudio-slider slider {
@@ -78,26 +183,40 @@ window#waybar {
 }
 
 #pulseaudio-slider trough {
-  min-height: 8px;
-  min-width: 75px;
-  border-radius: 5px;
-  background: @dark-7;
+  min-height: 4px;
+  min-width: 80px;
+  border-radius: 99px;
+  background: @surface;
 }
 
 #pulseaudio-slider highlight {
-  min-width: 10px;
-  border-radius: 5px;
-  background: @highlight;
+  min-width: 4px;
+  border-radius: 99px;
+  background: @accent;
 }
+
+/* ---- Power drawer ---- */
 
 #custom-power,
 #custom-quit,
 #custom-lock,
 #custom-reboot {
-  margin: 0 4px;
-  font-size: 20px;
+  font-size: 15px;
 }
 
-#custom-quit {
-  font-weight: 200;
+#custom-power:hover {
+  color: @red;
+}
+
+/* ---- Tooltip: khớp với dunst ---- */
+
+tooltip {
+  background: @bg;
+  border: 1px solid @surface;
+  border-radius: 8px;
+}
+
+tooltip label {
+  color: @fg;
+  padding: 2px 4px;
 }

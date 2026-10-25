@@ -1,0 +1,7 @@
+# Sinh tự động bởi theme-render.py — đừng sửa tay. Nguồn: ~/.config/theme/templates/ghostty
+theme = TokyoNight Night
+background = {{bg}}
+foreground = {{fg}}
+cursor-color = {{accent}}
+selection-background = {{surface}}
+selection-foreground = {{fg}}

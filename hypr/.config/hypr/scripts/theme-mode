@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Chuyển bảng màu toàn hệ thống.
+#   theme-mode tokyonight   bảng màu cố định (mặc định)
+#   theme-mode wallpaper    màu sinh từ wallpaper hiện tại (cần matugen)
+#   theme-mode toggle       đổi qua lại (SUPER+SHIFT+T)
+#   theme-mode apply        render lại theo chế độ đang lưu (autostart)
+#   theme-mode refresh      như apply nhưng chỉ khi đang ở chế độ wallpaper (gọi sau khi đổi wallpaper)
+#   theme-mode status       in chế độ hiện tại
+
+state="$HOME/.cache/theme/mode"
+render="$HOME/.config/hypr/scripts/theme-render.py"
+mode=$(cat "$state" 2>/dev/null || echo tokyonight)
+
+case "$1" in
+    tokyonight | wallpaper) mode=$1 ;;
+    toggle) [ "$mode" = wallpaper ] && mode=tokyonight || mode=wallpaper ;;
+    apply | "") ;;
+    refresh) [ "$mode" = wallpaper ] || exit 0 ;;
+    status) echo "$mode"; exit 0 ;;
+    *) sed -n '2,8s/^# \?//p' "$0" >&2; exit 1 ;;
+esac
+
+if [ "$mode" = wallpaper ] && ! command -v matugen >/dev/null; then
+    notify-send -a Theme "Chưa cài matugen" "sudo pacman -S matugen để dùng màu theo wallpaper"
+    mode=tokyonight
+fi
+
+mkdir -p "$(dirname "$state")"
+echo "$mode" >"$state"
+
+if [ "$mode" = wallpaper ]; then
+    changed=$("$render" wallpaper "$(readlink -e "$HOME/.cache/current-wallpaper")") || exit 1
+else
+    changed=$("$render" tokyonight) || exit 1
+fi
+
+# Reload những app có file màu vừa đổi (rofi, wlogout, hyprlock đọc lại ở lần mở sau)
+grep -q 'colors.lua' <<<"$changed" && hyprctl reload >/dev/null
+grep -q 'waybar' <<<"$changed" && pkill -USR2 -x waybar
+grep -q 'dunst' <<<"$changed" && dunstctl reload
+grep -q 'ghostty' <<<"$changed" && pkill -USR2 -x ghostty
+
+if [ -n "$changed" ] && [ "$1" != apply ]; then
+    label=$([ "$mode" = wallpaper ] && echo "theo wallpaper" || echo "TokyoNight")
+    notify-send -a Theme "Bảng màu: $label" "App GTK cần mở lại để nhận màu mới"
+fi
+exit 0

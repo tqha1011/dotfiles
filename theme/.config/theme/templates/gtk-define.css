@@ -1,0 +1,12 @@
+/* Sinh tự động bởi theme-render.py — đừng sửa tay. Nguồn: ~/.config/theme/templates/gtk-define.css */
+@define-color bg      {{bg}};
+@define-color bg_dark {{bg_dark}};
+@define-color surface {{surface}};
+@define-color border  {{border}};
+@define-color fg      {{fg}};
+@define-color muted   {{muted}};
+@define-color accent  {{accent}};
+@define-color accent2 {{accent2}};
+@define-color red     {{red}};
+@define-color yellow  {{yellow}};
+@define-color green   {{green}};

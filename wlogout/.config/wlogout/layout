@@ -1,36 +1,30 @@
 {
-    "label" : "lock",
-    "action" : "loginctl lock-session",
-    "text" : "Lock",
-    "keybind" : "l"
+    "label": "lock",
+    "action": "loginctl lock-session",
+    "text": "Khóa",
+    "keybind": "l"
 }
 {
-    "label" : "hibernate",
-    "action" : "systemctl hibernate",
-    "text" : "Hibernate",
-    "keybind" : "h"
+    "label": "logout",
+    "action": "hyprctl dispatch 'hl.dsp.exit()'",
+    "text": "Đăng xuất",
+    "keybind": "e"
 }
 {
-    "label" : "logout",
-    "action" : "hyprctl dispatch exit",
-    "text" : "Logout",
-    "keybind" : "e"
+    "label": "suspend",
+    "action": "systemctl suspend",
+    "text": "Ngủ",
+    "keybind": "u"
 }
 {
-    "label" : "shutdown",
-    "action" : "systemctl poweroff",
-    "text" : "Shutdown",
-    "keybind" : "s"
+    "label": "reboot",
+    "action": "systemctl reboot",
+    "text": "Khởi động lại",
+    "keybind": "r"
 }
 {
-    "label" : "suspend",
-    "action" : "systemctl suspend",
-    "text" : "Suspend",
-    "keybind" : "u"
-}
-{
-    "label" : "reboot",
-    "action" : "systemctl reboot",
-    "text" : "Reboot",
-    "keybind" : "r"
+    "label": "shutdown",
+    "action": "systemctl poweroff",
+    "text": "Tắt máy",
+    "keybind": "s"
 }

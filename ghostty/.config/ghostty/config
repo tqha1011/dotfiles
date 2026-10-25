@@ -1,6 +1,8 @@
 font-family = JetBrainsMono Nerd Font
 font-size = 12
 theme = TokyoNight Night
+# Ghi đè nền/chữ/con trỏ theo bảng màu hiện tại (theme-render.py); "?" = bỏ qua nếu chưa có
+config-file = ?colors
 background-opacity = 0.92
 window-padding-x = 12
 window-padding-y = 12

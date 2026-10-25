@@ -1,0 +1,12 @@
+/* Sinh tự động bởi theme-render.py — đừng sửa tay. Nguồn: ~/.config/theme/templates/rofi.rasi */
+* {
+    background:     {{bg}};
+    background-alt: {{surface}};
+    foreground:     {{fg}};
+    selected:       {{accent}};
+    urgent:         {{red}};
+    active:         {{yellow}};
+    muted:          {{muted}};
+    glass:          {{bg}}d9;   /* nền kính: Hyprland blur phía sau (layer rule rofi) */
+    hairline:       {{surface}};
+}

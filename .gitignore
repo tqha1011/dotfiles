@@ -1,3 +1,16 @@
 *.log
 *.cache
 .DS_Store
+
+# Sinh bởi hypr/.config/hypr/scripts/theme-render.py (theme-mode)
+waybar/.config/waybar/colors.css
+wlogout/.config/wlogout/colors.css
+wlogout/.config/wlogout/icons/
+rofi/.config/rofi/shared/colors.rasi
+dunst/.config/dunst/dunstrc.d/
+hypr/.config/hypr/colors.lua
+hypr/.config/hypr/colors-hyprlock.conf
+ghostty/.config/ghostty/colors
+
+# Python bytecode
+__pycache__/

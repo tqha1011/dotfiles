@@ -1,321 +1,163 @@
-////////////////////////////////////////////////////////////////////////
-//        ______          __     ____                 __  ______      //
-//       / ____/___  ____/ /__  / __ \____  _____    / / / / __ \     //
-//      / /   / __ \/ __  / _ \/ / / / __ \/ ___/   / /_/ / / / /     //
-//     / /___/ /_/ / /_/ /  __/ /_/ / /_/ (__  )   / __  / /_/ /      //
-//     \____/\____/\__,_/\___/\____/ .___/____/   /_/ /_/\___\_\      //
-//                                /_/                                 //
-////////////////////////////////////////////////////////////////////////
+/* Launcher (SUPER+R / SUPER+Space) — kính mờ TokyoNight, một cột, dòng đang chọn có vạch accent bên trái
+ * (cùng motif với chấm workspace trên waybar). Màu: shared/colors.rasi do theme-render.py sinh ra.
+ * clipboard.rasi kế thừa file này. */
 
-/*****----- Configuration -----*****/
 configuration {
-	modi:                       "drun,run,filebrowser,ssh,window";
-    show-icons:                 true;
-
-    display-drun:               " ";
-    display-run:                " ";
-    display-filebrowser:        " ";
-    display-window:             " ";
-	display-ssh:                " ";
-
-	drun-display-format:        "{name}";
-	window-format:              "{w} · {c} · {t}";
+    modi:                  "drun,run,window,filebrowser";
+    show-icons:            true;
+    icon-theme:            "Tela-dark";
+    drun-display-format:   "{name}<span alpha='45%' size='small'>   {generic}</span>";
+    window-format:         "{c}<span alpha='45%' size='small'>   {t}</span>";
+    display-drun:          "Ứng dụng";
+    display-run:           "Lệnh";
+    display-window:        "Cửa sổ";
+    display-filebrowser:   "Tệp";
+    hover-select:          true;
+    me-select-entry:       "";
+    me-accept-entry:       "MousePrimary";
 }
 
-/*****----- Global Properties -----*****/
-@import                          "shared/colors.rasi"
-@import                          "shared/fonts.rasi"
+@import "shared/colors.rasi"
 
 * {
-    border-colour:               var(selected);
-    handle-colour:               var(selected);
-    background-colour:           var(background);
-    foreground-colour:           var(foreground);
-    alternate-background:        var(background-alt);
-    normal-background:           var(background);
-    normal-foreground:           var(foreground);
-    urgent-background:           var(urgent);
-    urgent-foreground:           var(background);
-    active-background:           var(active);
-    active-foreground:           var(background);
-    selected-normal-background:  var(selected);
-    selected-normal-foreground:  var(background);
-    selected-urgent-background:  var(active);
-    selected-urgent-foreground:  var(background);
-    selected-active-background:  var(urgent);
-    selected-active-foreground:  var(background);
-    alternate-normal-background: var(background);
-    alternate-normal-foreground: var(foreground);
-    alternate-urgent-background: var(urgent);
-    alternate-urgent-foreground: var(background);
-    alternate-active-background: var(active);
-    alternate-active-foreground: var(background);
+    font:             "Inter 12";
+    background-color: transparent;
+    text-color:       @foreground;
 }
 
-/*****----- Main Window -----*****/
 window {
-    /* properties for window widget */
-    transparency:                "real";
-    location:                    center;
-    anchor:                      center;
-    fullscreen:                  false;
-    width:                       800px;
-    x-offset:                    0px;
-    y-offset:                    0px;
-
-    /* properties for all widgets */
-    enabled:                     true;
-    margin:                      0px;
-    padding:                     0px;
-    border:                      0px solid;
-    border-radius:               10px;
-    border-color:                @border-colour;
-    cursor:                      "default";
-    /* Backgroud Colors */
-    background-color:            @background-colour;
-    /* Backgroud Image */
-    //background-image:          url("/path/to/image.png", none);
-    /* Simple Linear Gradient */
-    //background-image:          linear-gradient(red, orange, pink, purple);
-    /* Directional Linear Gradient */
-    //background-image:          linear-gradient(to bottom, pink, yellow, magenta);
-    /* Angle Linear Gradient */
-    //background-image:          linear-gradient(45, cyan, purple, indigo);
+    location:         center;
+    anchor:           center;
+    width:            620px;
+    transparency:     "real";
+    border:           1px;
+    border-color:     @hairline;
+    border-radius:    16px;
+    background-color: @glass;
 }
 
-/*****----- Main Box -----*****/
 mainbox {
-    enabled:                     true;
-    spacing:                     0px;
-    margin:                      0px;
-    padding:                     20px;
-    border:                      0px solid;
-    border-radius:               0px 0px 0px 0px;
-    border-color:                @border-colour;
-    background-color:            transparent;
-    children:                    [ "inputbar", "message", "mode-switcher", "listview" ];
+    padding:  0px;
+    spacing:  0px;
+    children: [ "inputbar", "message", "listview", "mode-switcher" ];
 }
 
-/*****----- Inputbar -----*****/
+/* ---- Ô tìm kiếm: lớn, im lặng ---- */
+
 inputbar {
-    enabled:                     true;
-    spacing:                     10px;
-    margin:                      0px 0px 10px 0px;
-    padding:                     5px 10px;
-    border:                      0px solid;
-    border-radius:               10px;
-    border-color:                @border-colour;
-    background-color:            @alternate-background;
-    text-color:                  @foreground-colour;
-    children:                    [ "textbox-prompt-colon", "entry" ];
+    padding:      18px 22px;
+    spacing:      14px;
+    border:       0px 0px 1px 0px;
+    border-color: @hairline;
+    children:     [ "icon-search", "entry", "prompt" ];
 }
 
-prompt {
-    enabled:                     true;
-    background-color:            inherit;
-    text-color:                  inherit;
+icon-search {
+    expand:            false;
+    filename:          "search";
+    size:              20px;
+    vertical-align:    0.5;
 }
-textbox-prompt-colon {
-    enabled:                     true;
-    padding:                     5px 0px;
-    expand:                      false;
-    str:                         " ";
-    background-color:            inherit;
-    text-color:                  inherit;
-}
+
 entry {
-    enabled:                     true;
-    padding:                     5px 0px;
-    background-color:            inherit;
-    text-color:                  inherit;
-    cursor:                      text;
-    placeholder:                 "Search...";
-    placeholder-color:           inherit;
-}
-num-filtered-rows {
-    enabled:                     true;
-    expand:                      false;
-    background-color:            inherit;
-    text-color:                  inherit;
-}
-textbox-num-sep {
-    enabled:                     true;
-    expand:                      false;
-    str:                         "/";
-    background-color:            inherit;
-    text-color:                  inherit;
-}
-num-rows {
-    enabled:                     true;
-    expand:                      false;
-    background-color:            inherit;
-    text-color:                  inherit;
-}
-case-indicator {
-    enabled:                     true;
-    background-color:            inherit;
-    text-color:                  inherit;
+    font:              "Inter 15";
+    placeholder:       "Tìm…";
+    placeholder-color: @muted;
+    cursor:            text;
+    vertical-align:    0.5;
 }
 
-/*****----- Listview -----*****/
-listview {
-    enabled:                     true;
-    columns:                     2;
-    lines:                       8;
-    cycle:                       true;
-    dynamic:                     true;
-    scrollbar:                   false;
-    layout:                      vertical;
-    reverse:                     false;
-    fixed-height:                true;
-    fixed-columns:               true;
-    
-    spacing:                     5px;
-    margin:                      0px;
-    padding:                     10px;
-    border:                      0px 2px 2px 2px ;
-    border-radius:               0px 0px 10px 10px;
-    border-color:                @border-colour;
-    background-color:            transparent;
-    text-color:                  @foreground-colour;
-    cursor:                      "default";
-}
-scrollbar {
-    handle-width:                5px ;
-    handle-color:                @handle-colour;
-    border-radius:               10px;
-    background-color:            @alternate-background;
+/* Tên chế độ hiện tại ở góc phải ô tìm kiếm */
+prompt {
+    font:           "Inter 11";
+    text-color:     @muted;
+    vertical-align: 0.5;
 }
 
-/*****----- Elements -----*****/
-element {
-    enabled:                     true;
-    spacing:                     10px;
-    margin:                      0px;
-    padding:                     6px;
-    border:                      0px solid;
-    border-radius:               6px;
-    border-color:                @border-colour;
-    background-color:            transparent;
-    text-color:                  @foreground-colour;
-    cursor:                      pointer;
-}
-element normal.normal {
-    background-color:            var(normal-background);
-    text-color:                  var(normal-foreground);
-}
-element normal.urgent {
-    background-color:            var(urgent-background);
-    text-color:                  var(urgent-foreground);
-}
-element normal.active {
-    background-color:            var(alternate-background);
-    border:                      0px 2px 2px 0px solid;
-    border-color:                var(active-background);
-}
-element selected.normal {
-    background-color:            var(alternate-background);
-    border:                      0px 2px 2px 0px solid;
-    border-color:                var(selected-normal-background);
-}
-element selected.urgent {
-    background-color:            var(alternate-background);
-    border:                      0px 2px 2px 0px solid;
-    border-color:                var(selected-urgent-background);
-}
-element selected.active {
-    background-color:            var(alternate-background);
-    border:                      0px 2px 2px 0px solid;
-    border-color:                var(selected-active-background);
-}
-element alternate.normal {
-    background-color:            var(alternate-normal-background);
-    text-color:                  var(alternate-normal-foreground);
-}
-element alternate.urgent {
-    background-color:            var(alternate-urgent-background);
-    text-color:                  var(alternate-urgent-foreground);
-}
-element alternate.active {
-    background-color:            var(alternate-background);
-    border:                      0px 2px 2px 0px solid;
-    border-color:                var(alternate-active-background);
-}
-element-icon {
-    background-color:            transparent;
-    text-color:                  inherit;
-    size:                        24px;
-    cursor:                      inherit;
-}
-element-text {
-    background-color:            transparent;
-    text-color:                  inherit;
-    highlight:                   inherit;
-    cursor:                      inherit;
-    vertical-align:              0.5;
-    horizontal-align:            0.0;
-}
-
-/*****----- Mode Switcher -----*****/
-mode-switcher{
-    enabled:                     true;
-    expand:                      false;
-    spacing:                     0px;
-    margin:                      0px;
-    padding:                     0px;
-    border:                      0px solid;
-    border-radius:               0px;
-    border-color:                @border-colour;
-    background-color:            transparent;
-    text-color:                  @foreground-colour;
-}
-button {
-    padding:                     10px;
-    border:                      0px 0px 2px 0px ;
-    border-radius:               10px 10px 0px 0px;
-    border-color:                @border-colour;
-    background-color:            @background-colour;
-    text-color:                  inherit;
-    cursor:                      pointer;
-}
-button selected {
-    border:                      2px 2px 0px 2px ;
-    border-radius:               10px 10px 0px 0px;
-    border-color:                @border-colour;
-    background-color:            var(normal-background);
-    text-color:                  var(normal-foreground);
-}
-
-/*****----- Message -----*****/
 message {
-    enabled:                     true;
-    margin:                      0px 0px 10px 0px;
-    padding:                     0px;
-    border:                      0px solid;
-    border-radius:               0px 0px 0px 0px;
-    border-color:                @border-colour;
-    background-color:            transparent;
-    text-color:                  @foreground-colour;
+    padding: 10px 22px 0px 22px;
 }
+
 textbox {
-    padding:                     10px;
-    border:                      0px solid;
-    border-radius:               10px;
-    border-color:                @border-colour;
-    background-color:            @alternate-background;
-    text-color:                  @foreground-colour;
-    vertical-align:              0.5;
-    horizontal-align:            0.0;
-    highlight:                   none;
-    placeholder-color:           @foreground-colour;
-    blink:                       true;
-    markup:                      true;
+    font:       "Inter 10";
+    text-color: @muted;
 }
-error-message {
-    padding:                     10px;
-    border:                      2px solid;
-    border-radius:               10px;
-    border-color:                @border-colour;
-    background-color:            @background-colour;
-    text-color:                  @foreground-colour;
+
+/* ---- Danh sách ---- */
+
+listview {
+    columns:      1;
+    lines:        8;
+    fixed-height: true;
+    dynamic:      true;
+    cycle:        true;
+    scrollbar:    false;
+    padding:      10px;
+    spacing:      2px;
+}
+
+element {
+    padding:       9px 14px 9px 12px;
+    spacing:       14px;
+    border:        0px 0px 0px 3px;
+    border-color:  transparent;
+    border-radius: 10px;
+    cursor:        pointer;
+}
+
+/* Điểm nhấn duy nhất: dòng đang chọn — nền surface + vạch accent bên trái */
+element selected.normal,
+element selected.active {
+    background-color: @background-alt;
+    border-color:     @selected;
+}
+
+element selected.urgent {
+    background-color: @background-alt;
+    border-color:     @urgent;
+}
+
+element normal.urgent,
+element alternate.urgent {
+    text-color: @urgent;
+}
+
+element normal.active,
+element alternate.active {
+    text-color: @active;
+}
+
+element-icon {
+    size:           28px;
+    cursor:         inherit;
+    vertical-align: 0.5;
+}
+
+element-text {
+    markup:         true;
+    cursor:         inherit;
+    vertical-align: 0.5;
+    text-color:     inherit;
+}
+
+/* ---- Chuyển chế độ: chữ nhỏ ở đáy, chế độ đang mở màu accent ---- */
+
+mode-switcher {
+    padding:      10px 14px 12px 14px;
+    spacing:      4px;
+    border:       1px 0px 0px 0px;
+    border-color: @hairline;
+}
+
+button {
+    font:          "Inter 10";
+    padding:       6px 12px;
+    border-radius: 8px;
+    text-color:    @muted;
+    cursor:        pointer;
+}
+
+button selected {
+    background-color: @background-alt;
+    text-color:       @selected;
 }

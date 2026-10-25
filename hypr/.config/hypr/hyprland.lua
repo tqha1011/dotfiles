@@ -45,7 +45,7 @@ hl.monitor({
 -- Set programs that you use
 local terminal    = "ghostty"
 local fileManager = "dolphin"
-local menu        = "hyprlauncher"
+local menu        = "pidof rofi || rofi -show drun -theme ~/.config/rofi/launcher.rasi"
 
 
 -------------------
@@ -63,7 +63,8 @@ hl.on("hyprland.start", function()
     hl.exec_cmd([[
         awww-daemon &
         while ! awww query >/dev/null 2>&1; do sleep 0.05; done
-        awww img ~/.local/share/wallpapers/chainsaw-man.jpg --transition-type wipe --transition-duration 0.5
+        wall=$(readlink -e ~/.cache/current-wallpaper || echo ~/.local/share/wallpapers/chainsaw-man.jpg)
+        ~/.config/hypr/scripts/set-wallpaper.sh "$wall" 0.5
     ]])
 end)
 
@@ -84,12 +85,38 @@ end)
 
 -- start the waybar
 hl.on("hyprland.start", function()
-    hl.exec_cmd("fc-cache -f && waybar")
+    hl.exec_cmd("~/.config/hypr/scripts/theme-mode apply; fc-cache -f && waybar") -- render màu trước khi waybar đọc colors.css
+end)
+
+-- lịch sử clipboard (cliphist) + ánh sáng ban đêm (hyprsunset.conf)
+hl.on("hyprland.start", function()
+    hl.exec_cmd([[
+        command -v cliphist >/dev/null && {
+            wl-paste --type text --watch cliphist store &
+            wl-paste --type image --watch cliphist store &
+        }
+        command -v hyprsunset >/dev/null && hyprsunset &
+    ]])
+end)
+
+-- dark mode GTK/Qt, icon, con trỏ (gsettings + kdeglobals)
+hl.on("hyprland.start", function()
+    hl.exec_cmd("~/.config/hypr/scripts/apply-theme.sh")
 end)
 
 -- start the fcitx-5
 hl.on("hyprland.start", function()
     hl.exec_cmd("fcitx5 -d")
+end)
+
+-- start dunst (chạy trước để giữ D-Bus notifications, không để plasma chiếm)
+hl.on("hyprland.start", function()
+    hl.exec_cmd("dunst")
+end)
+
+-- start hypridle (tự khóa / tắt màn / suspend theo hypridle.conf)
+hl.on("hyprland.start", function()
+    hl.exec_cmd("hypridle")
 end)
 
 -------------------------------
@@ -100,6 +127,10 @@ end)
 
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
+hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
+hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")
+hl.env("QT_QPA_PLATFORMTHEME", "kde") -- Qt app (dolphin…) đọc màu từ kdeglobals (TokyoNight.colors)
+hl.env("GTK_THEME", "Breeze-Dark") -- GTK4 trên Wayland lấy theme qua portal KDE, bỏ qua gsettings/settings.ini
 
 
 -----------------------
@@ -125,6 +156,12 @@ hl.env("HYPRCURSOR_SIZE", "24")
 ---- LOOK AND FEEL ----
 -----------------------
 
+-- Màu viền do theme-render.py sinh ra (colors.lua); fallback TokyoNight nếu chưa render lần nào
+local okTheme, theme = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/colors.lua")
+if not okTheme then
+    theme = { active = { "rgba(7aa2f7ee)", "rgba(bb9af7ee)" }, inactive = "rgba(414868aa)" }
+end
+
 -- Refer to https://wiki.hypr.land/Configuring/Basics/Variables/
 hl.config({
     general = {
@@ -134,8 +171,8 @@ hl.config({
         border_size      = 2,
 
         col              = {
-            active_border   = { colors = { "rgba(33ccffee)", "rgba(00ff99ee)" }, angle = 45 },
-            inactive_border = "rgba(595959aa)",
+            active_border   = { colors = theme.active, angle = 45 }, -- accent → accent2 (theme-mode)
+            inactive_border = theme.inactive,
         },
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
@@ -162,10 +199,12 @@ hl.config({
             color        = 0xee1a1a1a,
         },
 
+        -- Kính mờ thật cho waybar, rofi, dunst, wlogout (layer rules): đủ mạnh để chữ phía sau không đọc được
         blur             = {
             enabled  = true,
-            size     = 3,
-            passes   = 1,
+            size     = 7,
+            passes   = 3,
+            noise    = 0.02,
             vibrancy = 0.1696,
         },
     },
@@ -188,7 +227,7 @@ hl.curve("easy", { type = "spring", mass = 1, stiffness = 238.1191, dampening = 
 hl.animation({ leaf = "global", enabled = true, speed = 10, bezier = "default" })
 hl.animation({ leaf = "border", enabled = true, speed = 5.39, bezier = "easeOutQuint" })
 hl.animation({ leaf = "windows", enabled = true, speed = 4.79, spring = "easy" })
-hl.animation({ leaf = "windowsIn", enabled = true, speed = 4.1, spring = "easy", style = "popin 87%" })
+hl.animation({ leaf = "windowsIn", enabled = true, speed = 4.1, spring = "easy", style = "popin 92%" })
 hl.animation({ leaf = "windowsOut", enabled = true, speed = 1.49, bezier = "linear", style = "popin 87%" })
 hl.animation({ leaf = "fadeIn", enabled = true, speed = 1.73, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeOut", enabled = true, speed = 1.46, bezier = "almostLinear" })
@@ -198,9 +237,11 @@ hl.animation({ leaf = "layersIn", enabled = true, speed = 4, bezier = "easeOutQu
 hl.animation({ leaf = "layersOut", enabled = true, speed = 1.5, bezier = "linear", style = "fade" })
 hl.animation({ leaf = "fadeLayersIn", enabled = true, speed = 1.79, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.39, bezier = "almostLinear" })
-hl.animation({ leaf = "workspaces", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesIn", enabled = true, speed = 1.21, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesOut", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
+-- Workspace trượt theo hướng di chuyển, cùng nhịp easeOutQuint ~300ms với vạch workspace trên waybar
+hl.animation({ leaf = "workspaces", enabled = true, speed = 3, bezier = "easeOutQuint", style = "slidefade 20%" })
+hl.animation({ leaf = "workspacesIn", enabled = true, speed = 3, bezier = "easeOutQuint", style = "slidefade 20%" })
+hl.animation({ leaf = "workspacesOut", enabled = true, speed = 3, bezier = "easeOutQuint", style = "slidefade 20%" })
+hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 3, bezier = "easeOutQuint", style = "slidefadevert 20%" })
 hl.animation({ leaf = "zoomFactor", enabled = true, speed = 7, bezier = "quick" })
 
 -- Ref https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
@@ -335,16 +376,14 @@ hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
 -- Laptop multimedia keys for volume and LCD brightness
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"),
-    { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
-    { locked = true, repeating = true })
-hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),
-    { locked = true, repeating = true })
-hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),
-    { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+"), { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"), { locked = true, repeating = true })
+-- osd.sh chạy lệnh wpctl/brightnessctl rồi hiện popup có thanh tiến trình qua dunst
+local osd = "~/.config/hypr/scripts/osd.sh "
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(osd .. "volume-up"), { locked = true, repeating = true })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(osd .. "volume-down"), { locked = true, repeating = true })
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd(osd .. "volume-mute"), { locked = true })
+hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd(osd .. "mic-mute"), { locked = true })
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd(osd .. "brightness-up"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(osd .. "brightness-down"), { locked = true, repeating = true })
 
 -- Requires playerctl
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
@@ -354,10 +393,30 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 
 -- Bind keys
 hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = 1 }))
-hl.bind("SUPER + L", hl.dsp.exec_cmd("hyprlock"))
-hl.bind("SUPER + Escape", hl.dsp.exec_cmd("wlogout"))
+hl.bind("SUPER + L", hl.dsp.exec_cmd("loginctl lock-session")) -- qua hypridle → không bao giờ chạy 2 hyprlock
+-- 5 thẻ 180px giữa màn hình: lề trái/phải = (1920 - 5*180 - 4*16) / 2
+hl.bind("SUPER + Escape", hl.dsp.exec_cmd("pidof wlogout || wlogout -p layer-shell -b 5 -c 16 -T 440 -B 440 -L 478 -R 478"))
 hl.bind("SUPER + W", hl.dsp.exec_cmd("~/.config/hypr/scripts/wallpaper-picker-rofi.sh"))
-hl.bind("Space + F", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/launcher.rasi"))
+hl.bind(mainMod .. " + Space", hl.dsp.exec_cmd(menu)) -- "Space + F" cũ bị Hyprland hiểu thành phím F trơn
+
+-- Screenshots (hyprshot: lưu vào ~/Pictures/Screenshots + copy clipboard + gửi thông báo)
+local screenshot = "hyprshot -o ~/Pictures/Screenshots -t 5000 -m "
+hl.bind("Print", hl.dsp.exec_cmd(screenshot .. "region"))
+hl.bind("SHIFT + Print", hl.dsp.exec_cmd(screenshot .. "window"))
+hl.bind("CTRL + Print", hl.dsp.exec_cmd(screenshot .. "output -m active"))
+hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd(screenshot .. "region")) -- cho bàn phím không có Print
+
+-- Notifications (dunst)
+hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("dunstctl history-pop"))
+hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("dunstctl close-all"))
+hl.bind(mainMod .. " + CTRL + N", hl.dsp.exec_cmd("dunstctl set-paused toggle")) -- bật/tắt chế độ không làm phiền
+
+-- Tiện ích: lịch sử clipboard, hút màu
+hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("~/.config/hypr/scripts/clipboard.sh"))
+hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd("~/.config/hypr/scripts/colorpick.sh"))
+
+-- Bảng màu: TokyoNight ↔ theo wallpaper
+hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("~/.config/hypr/scripts/theme-mode toggle"))
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
@@ -391,6 +450,21 @@ hl.window_rule({
     no_focus = true,
 })
 
+-- Waybar: blur phía sau các island (bỏ qua vùng trong suốt giữa chúng), trượt xuống khi xuất hiện
+hl.layer_rule({
+    name         = "waybar",
+    match        = { namespace = "waybar" },
+
+    blur         = true,
+    ignore_alpha = 0.2,
+    animation    = "slide top",
+})
+
+-- Kính mờ cho rofi, thông báo và menu nguồn (ignore_alpha: không blur vùng trong suốt)
+hl.layer_rule({ name = "rofi", match = { namespace = "rofi" }, blur = true, ignore_alpha = 0.2, animation = "popin 90%" })
+hl.layer_rule({ name = "notifications", match = { namespace = "notifications" }, blur = true, ignore_alpha = 0.2, animation = "slide right" })
+hl.layer_rule({ name = "logout", match = { namespace = "logout_dialog" }, blur = true, animation = "fade" })
+
 -- Layer rules also return a handle.
 -- local overlayLayerRule = hl.layer_rule({
 --     name  = "no-anim-overlay",
@@ -406,4 +480,14 @@ hl.window_rule({
 
     move  = "20 monitor_h-120",
     float = true,
+})
+
+-- Tiện ích hệ thống: nổi, cỡ vừa, giữa màn hình (thay vì chiếm nửa màn hình)
+hl.window_rule({
+    name   = "float-utilities",
+    match  = { class = "^(org.pulseaudio.pavucontrol|blueman-manager|nm-connection-editor|floating.nmtui)$" },
+
+    float  = true,
+    size   = "900 600",
+    center = true,
 })

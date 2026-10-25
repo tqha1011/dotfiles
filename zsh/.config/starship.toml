@@ -6,8 +6,8 @@ palette = "tokyonight_night"
 add_newline = true
 
 format = """
-[╭─](bold green)$directory$git_branch$git_status$os$nodejs$python$docker_context$dotnet$lua
-[╰─](bold green)$character"""
+[╭─](overlay0)$directory$git_branch$git_status$os$nodejs$python$docker_context$dotnet$lua
+[╰─](overlay0)$character"""
 
 right_format = '$username$hostname$cmd_duration$memory_usage'
 
@@ -15,7 +15,7 @@ right_format = '$username$hostname$cmd_duration$memory_usage'
 symbol = " "
 
 [character]
-success_symbol = '[➜](bold green)'
+success_symbol = '[➜](bold blue)'
 error_symbol = '[✗](bold red)'
 
 [directory]
@@ -25,7 +25,7 @@ truncate_to_repo = true
 format = '[ $path]($style)[$read_only]($read_only_style)'
 
 [git_branch]
-symbol = '🌱 '
+symbol = ' '
 truncation_length = 20
 truncation_symbol = ''
 style = 'bold lavender'
@@ -71,13 +71,13 @@ style = 'bold blue'
 format = '[ $symbol$context]($style)'
 
 [dotnet]
-symbol = '🥅 '
+symbol = ' '
 style = 'bold mauve'
 heuristic = false
 format = '[ $symbol$version]($style)'
 
 [lua]
-symbol = '🌕 '
+symbol = ' '
 style = 'bold peach'
 format = '[ $symbol$version]($style)'
 

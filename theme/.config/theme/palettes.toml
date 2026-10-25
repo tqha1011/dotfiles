@@ -1,0 +1,20 @@
+# Token màu dùng chung cho mọi app (render bởi hypr/scripts/theme-render.py)
+# Chế độ "wallpaper" thay các token có ghi [matugen] bằng màu Material sinh từ wallpaper;
+# các màu trạng thái (red/orange/yellow/green) giữ nguyên để luôn đọc được nghĩa.
+
+[tokyonight]
+bg      = "#1a1b26"  # [matugen] surface
+bg_dark = "#16161e"  # [matugen] surface_container_lowest
+bg_alt  = "#1f2335"  # [matugen] surface_container_low
+surface = "#292e42"  # [matugen] surface_container_high
+border  = "#414868"  # [matugen] outline_variant
+fg      = "#c0caf5"  # [matugen] on_surface
+fg_dim  = "#a9b1d6"  # [matugen] on_surface_variant
+muted   = "#565f89"  # [matugen] outline
+accent  = "#7aa2f7"  # [matugen] primary
+accent2 = "#bb9af7"  # [matugen] tertiary
+cyan    = "#7dcfff"  # [matugen] secondary
+red     = "#f7768e"
+orange  = "#ff9e64"
+yellow  = "#e0af68"
+green   = "#9ece6a"

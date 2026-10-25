@@ -1,0 +1,24 @@
+/* Lịch sử clipboard (hypr/scripts/clipboard.sh) — kế thừa launcher, bỏ mode switcher, danh sách 1 cột */
+@import "launcher.rasi"
+
+configuration {
+    show-icons: false;
+}
+
+window {
+    width: 640px;
+}
+
+mainbox {
+    children: [ "inputbar", "message", "listview" ];
+}
+
+listview {
+    columns: 1;
+    lines: 10;
+    fixed-height: false; /* co theo số mục, không để khung trống khi lịch sử còn ít */
+}
+
+element-text {
+    font: "JetBrainsMono Nerd Font 11";
+}

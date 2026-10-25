@@ -1,50 +1,68 @@
+/* Màu: colors.css + icons/ do hypr/scripts/theme-render.py sinh ra (theme-mode) */
+@import url("colors.css");
+
 * {
-	background-image: none;
-	box-shadow: none;
+  background-image: none;
+  box-shadow: none;
+  font-family: "Inter", "JetBrainsMono Nerd Font";
 }
 
+/* Nền mờ nhẹ — Hyprland blur phía sau (layer rule logout_dialog) */
 window {
-	background-color: rgba(12, 12, 12, 0.9);
+  background-color: alpha(@bg, 0.55);
 }
 
 button {
-    border-radius: 0;
-    border-color: black;
-	text-decoration-color: #FFFFFF;
-    color: #FFFFFF;
-	background-color: #1E1E1E;
-	border-style: solid;
-	border-width: 1px;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: 25%;
+  margin: 0;
+  min-width: 178px; /* + viền 2px = 180px; lề -L/-R trong bind = (1920 - 5*180 - 4*16) / 2 */
+  border: 1px solid @surface;
+  border-radius: 20px;
+  background-color: alpha(@bg, 0.85);
+  color: @muted;
+  font-size: 15px;
+  padding: 0 0 28px 0;
+  transition: background-color 200ms cubic-bezier(0.23, 1, 0.32, 1),
+    border-color 200ms cubic-bezier(0.23, 1, 0.32, 1),
+    color 200ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-button:focus, button:active, button:hover {
-	background-color: #3700B3;
-	outline-style: none;
+/* Icon PNG do theme-render.py vẽ từ glyph Nerd Font theo bảng màu hiện tại, có bản -hover */
+button {
+  background-repeat: no-repeat;
+  background-position: center 40%;
+  background-size: 28%;
 }
 
-#lock {
-    background-image: image(url("/usr/share/wlogout/icons/lock.png"), url("/usr/local/share/wlogout/icons/lock.png"));
+#lock { background-image: url("icons/lock.png"); }
+#lock:focus, #lock:hover { background-image: url("icons/lock-hover.png"); }
+
+#logout { background-image: url("icons/logout.png"); }
+#logout:focus, #logout:hover { background-image: url("icons/logout-hover.png"); }
+
+#suspend { background-image: url("icons/suspend.png"); }
+#suspend:focus, #suspend:hover { background-image: url("icons/suspend-hover.png"); }
+
+#reboot { background-image: url("icons/reboot.png"); }
+#reboot:focus, #reboot:hover { background-image: url("icons/reboot-hover.png"); }
+
+#shutdown { background-image: url("icons/shutdown.png"); }
+#shutdown:focus, #shutdown:hover { background-image: url("icons/shutdown-hover.png"); }
+
+button:focus,
+button:hover {
+  background-color: @surface;
+  border-color: @accent;
+  color: @fg;
+  outline-style: none;
 }
 
-#logout {
-    background-image: image(url("/usr/share/wlogout/icons/logout.png"), url("/usr/local/share/wlogout/icons/logout.png"));
+button:active {
+  background-color: alpha(@accent, 0.15);
 }
 
-#suspend {
-    background-image: image(url("/usr/share/wlogout/icons/suspend.png"), url("/usr/local/share/wlogout/icons/suspend.png"));
-}
-
-#hibernate {
-    background-image: image(url("/usr/share/wlogout/icons/hibernate.png"), url("/usr/local/share/wlogout/icons/hibernate.png"));
-}
-
-#shutdown {
-    background-image: image(url("/usr/share/wlogout/icons/shutdown.png"), url("/usr/local/share/wlogout/icons/shutdown.png"));
-}
-
-#reboot {
-    background-image: image(url("/usr/share/wlogout/icons/reboot.png"), url("/usr/local/share/wlogout/icons/reboot.png"));
+/* Hậu quả nặng nhất → đỏ */
+#shutdown:focus,
+#shutdown:hover {
+  border-color: @red;
+  color: @red;
 }
