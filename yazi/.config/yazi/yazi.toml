@@ -1,0 +1,6 @@
+# Màu nằm ở theme.toml (sinh bởi theme-mode, gitignored)
+[mgr]
+ratio = [1, 3, 4]
+sort_dir_first = true
+show_hidden = true
+show_symlink = true

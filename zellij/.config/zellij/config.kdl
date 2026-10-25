@@ -1,0 +1,9 @@
+// Theme "palette" nằm ở themes/palette.kdl (sinh bởi theme-mode, gitignored)
+theme "palette"
+default_layout "compact"
+default_shell "zsh"
+mouse_mode true
+copy_on_select true
+pane_frames false
+show_startup_tips false
+show_release_notes false

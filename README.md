@@ -22,7 +22,8 @@ dotfiles/
 │
 ├── ghostty/
 │   └── .config/ghostty/
-│       └── config                        # Terminal emulator config
+│       ├── config                        # Terminal emulator config (colors file is generated)
+│       └── shaders/cursor-trail.glsl     # Glowing trail that follows the cursor
 │
 ├── hypr/
 │   └── .config/hypr/
@@ -38,8 +39,13 @@ dotfiles/
 │           ├── lock-info.sh              # Greeting / battery+wifi / weather text for hyprlock
 │           ├── theme-mode                # Palette switch: tokyonight | wallpaper (SUPER+SHIFT+T)
 │           ├── theme-render.py           # Renders palette tokens into every app's color file
+│           ├── dropdown-term.sh          # Drop-down ghostty scratchpad (SUPER+`)
 │           ├── clipboard.sh              # Clipboard history via cliphist + rofi (SUPER+SHIFT+V)
 │           └── colorpick.sh              # hyprpicker + notification with a swatch (SUPER+SHIFT+C)
+│
+├── atuin/
+│   └── .config/atuin/
+│       └── config.toml                   # Shell history search (themes/palette.toml is generated)
 │
 ├── rofi/
 │   └── .config/rofi/
@@ -70,7 +76,7 @@ dotfiles/
 ├── theme/
 │   ├── .config/theme/
 │   │   ├── palettes.toml                 # Color tokens shared by every app
-│   │   └── templates/                    # One template per app color file
+│   │   └── templates/                    # One template per app color file (incl. starship prompt, fzf, eza, zsh highlight)
 │   └── .local/share/color-schemes/
 │       └── TokyoNight.colors             # KDE/Qt color scheme (applied by hypr/scripts/apply-theme.sh)
 │
@@ -80,10 +86,16 @@ dotfiles/
 │       ├── style.css
 │       └── icons/                        # PNG icons rendered from Nerd Font glyphs (normal + hover)
 │
+├── yazi/
+│   └── .config/yazi/
+│       └── yazi.toml                     # File manager (theme.toml is generated); `y` cd's on exit
+│
+├── zellij/
+│   └── .config/zellij/
+│       └── config.kdl                    # Terminal multiplexer (themes/palette.kdl is generated)
+│
 ├── zsh/
-│   ├── .zshrc                            # Shell config (oh-my-zsh, plugins, starship)
-│   └── .config/
-│       └── starship.toml                 # Prompt config
+│   └── .zshrc                            # Shell config (oh-my-zsh, plugins, fzf, eza, bat, zoxide, starship)
 │
 ├── .stowrc                               # Stow target defaults to $HOME
 ├── .vscode/settings.json
@@ -112,6 +124,7 @@ sudo pacman -S --needed \
   waybar rofi dunst \
   fastfetch ghostty \
   stow zsh zsh-autosuggestions zsh-syntax-highlighting starship \
+  fzf fd eza bat zoxide atuin zellij yazi btop lazygit git-delta \
   brightnessctl playerctl wireplumber pavucontrol networkmanager \
   imagemagick ttf-jetbrains-mono-nerd otf-font-awesome \
   awww hyprshot grim slurp wl-clipboard libnotify \
@@ -128,7 +141,16 @@ sudo pacman -S --needed \
 | `fastfetch` | Terminal system info banner |
 | `ghostty` | Terminal emulator |
 | `zsh` + `zsh-autosuggestions` + `zsh-syntax-highlighting` | Shell and plugins used in `.zshrc` |
-| `starship` | Shell prompt |
+| `starship` | Shell prompt (pill layout, template in `theme/` so it follows the palette) |
+| `fzf` + `fd` | Fuzzy finder: Ctrl-R / Ctrl-T / Alt-C, colors from the palette |
+| `eza` | `ls` replacement (aliases in `.zshrc`, theme from the palette) |
+| `bat` | `cat` replacement and man pager |
+| `zoxide` | Smarter `cd` |
+| `atuin` | Shell history search on Ctrl-R (themed, `atuin import auto` once to bring in old history) |
+| `yazi` | Terminal file manager with image previews (`y`), themed through the palette |
+| `zellij` | Terminal multiplexer, `zj` attaches/creates the `main` session |
+| `btop` | System monitor, themed through `~/.config/btop/themes/palette.theme` |
+| `lazygit` + `git-delta` | Git TUI and diff pager (`lg`); delta only gets wired into git once it is installed |
 | `brightnessctl` | Laptop brightness keybinds |
 | `playerctl` | Media key bindings |
 | `wireplumber` | Provides `wpctl`, used for volume keybinds |
@@ -161,10 +183,11 @@ yay -S --needed \
 
 ### oh-my-zsh (not a pacman/AUR package)
 
-`.zshrc` expects oh-my-zsh to already be installed:
+`.zshrc` expects oh-my-zsh to already be installed, plus the `fzf-tab` plugin (Tab completion menu through fzf):
 
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+git clone https://github.com/Aloxaf/fzf-tab ~/.oh-my-zsh/custom/plugins/fzf-tab
 ```
 
 ## Applying the dotfiles
@@ -174,7 +197,7 @@ Clone the repo and stow the packages you want:
 ```bash
 git clone <this-repo-url> ~/Code/personal/dotfiles
 cd ~/Code/personal/dotfiles
-stow hypr waybar rofi dunst fastfetch ghostty waypaper wlogout zsh assets theme
+stow hypr waybar rofi dunst fastfetch ghostty waypaper wlogout zsh assets theme atuin zellij yazi
 ```
 
 Login screen (SDDM) theme, outside `$HOME` so it needs root:

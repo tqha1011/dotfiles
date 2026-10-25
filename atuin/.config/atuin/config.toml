@@ -1,0 +1,12 @@
+# Theme "palette" nằm ở themes/palette.toml (sinh bởi theme-mode, gitignored)
+style = "compact"
+inline_height = 18
+show_preview = true
+search_mode = "fuzzy"
+filter_mode = "global"
+filter_mode_shell_up_key_binding = "session"
+enter_accept = false   # Enter chỉ đưa lệnh vào dòng nhập; Tab/Enter chạy ngay thì đổi thành true
+update_check = false
+
+[theme]
+name = "palette"

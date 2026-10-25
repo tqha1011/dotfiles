@@ -11,6 +11,9 @@ dunst/.config/dunst/dunstrc.d/
 hypr/.config/hypr/colors.lua
 hypr/.config/hypr/colors-hyprlock.conf
 ghostty/.config/ghostty/colors
+zellij/.config/zellij/themes/
+atuin/.config/atuin/themes/
+yazi/.config/yazi/theme.toml
 
 # Python bytecode
 __pycache__/

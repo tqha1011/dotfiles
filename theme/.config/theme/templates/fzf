@@ -1,0 +1,10 @@
+# Sinh tự động bởi theme-render.py — đừng sửa tay. fzf đọc file này qua FZF_DEFAULT_OPTS_FILE
+--color=bg:-1,bg+:{{surface}},fg:{{fg_dim}},fg+:{{fg}},hl:{{accent}},hl+:{{accent}},info:{{muted}},prompt:{{accent}},pointer:{{accent2}},marker:{{green}},spinner:{{accent2}},header:{{muted}},border:{{border}},gutter:-1,separator:{{border}},scrollbar:{{border}}
+--border=rounded
+--layout=reverse
+--height=50%
+--info=inline-right
+--prompt='❯ '
+--pointer='▌'
+--marker='┃'
+--bind=ctrl-/:toggle-preview

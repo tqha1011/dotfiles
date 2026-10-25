@@ -1,0 +1,28 @@
+# Sinh tự động bởi theme-render.py — đừng sửa tay. Git đọc ~/.config/git/config sau ~/.gitconfig
+[core]
+	pager = delta
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	line-numbers = true
+	syntax-theme = ansi
+	file-style = bold {{accent}}
+	file-decoration-style = {{border}} ul
+	hunk-header-style = file line-number syntax
+	hunk-header-decoration-style = {{border}} box
+	hunk-header-line-number-style = {{accent2}}
+	line-numbers-minus-style = {{red}}
+	line-numbers-plus-style = {{green}}
+	line-numbers-zero-style = {{muted}}
+	line-numbers-left-format = "{nm:^4} "
+	line-numbers-right-format = "│{np:^4} "
+	minus-style = syntax {{red_dim}}
+	minus-emph-style = syntax bold {{red_dim}}
+	plus-style = syntax {{green_dim}}
+	plus-emph-style = syntax bold {{green_dim}}
+	zero-style = syntax
+	whitespace-error-style = reverse {{red}}
+	blame-palette = "{{bg}} {{bg_alt}} {{surface}}"

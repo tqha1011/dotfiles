@@ -1,0 +1,22 @@
+# Sinh tự động bởi theme-render.py — đừng sửa tay (nguồn: ~/.config/theme/templates/lazygit.yml)
+gui:
+  nerdFontsVersion: "3"
+  border: rounded
+  showBottomLine: false
+  theme:
+    activeBorderColor: ['{{accent}}', bold]
+    inactiveBorderColor: ['{{border}}']
+    searchingActiveBorderColor: ['{{yellow}}', bold]
+    optionsTextColor: ['{{accent}}']
+    selectedLineBgColor: ['{{surface}}']
+    inactiveViewSelectedLineBgColor: ['{{bg_alt}}']
+    cherryPickedCommitFgColor: ['{{accent}}']
+    cherryPickedCommitBgColor: ['{{accent2}}']
+    markedBaseCommitFgColor: ['{{accent}}']
+    markedBaseCommitBgColor: ['{{yellow}}']
+    unstagedChangesColor: ['{{red}}']
+    defaultFgColor: ['{{fg}}']
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never

@@ -1,0 +1,106 @@
+# Sinh tự động bởi theme-render.py — đừng sửa tay. Nguồn: ~/.config/theme/templates/starship.toml
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = true
+
+# Mỗi khối là một "viên thuốc" bo tròn:  /  là hai nửa vòng tròn (Nerd Font)
+format = """
+$os$directory$git_branch$git_status
+$character"""
+
+right_format = "$status$cmd_duration$nodejs$python$lua$dotnet$docker_context$username$hostname"
+
+[character]
+success_symbol = "[❯](bold {{accent}})"
+error_symbol = "[❯](bold {{red}})"
+vimcmd_symbol = "[❮](bold {{accent2}})"
+
+[os]
+disabled = false
+style = "bg:{{accent}} fg:{{bg}}"
+format = "[](fg:{{accent}})[ $symbol ]($style)[](fg:{{accent}}) "
+
+[os.symbols]
+Arch = "\U000F08C7"
+EndeavourOS = ""
+Linux = ""
+
+[directory]
+style = "bg:{{surface}} fg:{{fg}}"
+read_only_style = "bg:{{surface}} fg:{{red}}"
+read_only = " \U000F033E"
+truncation_length = 3
+truncation_symbol = "…/"
+truncate_to_repo = true
+format = "[](fg:{{surface}})[ \U000F024B $path]($style)[$read_only]($read_only_style)[ ](bg:{{surface}})[](fg:{{surface}}) "
+
+[git_branch]
+style = "bg:{{border}} fg:{{accent2}}"
+truncation_length = 24
+truncation_symbol = "…"
+format = "[](fg:{{border}})[  $branch ]($style)[](fg:{{border}}) "
+
+[git_status]
+style = "bg:{{surface}} fg:{{orange}}"
+format = "([](fg:{{surface}})[ $all_status$ahead_behind]($style)[](fg:{{surface}}) )"
+conflicted = "=$count "
+staged = "+$count "
+modified = "!$count "
+untracked = "?$count "
+deleted = "✘$count "
+renamed = "»$count "
+stashed = " "
+ahead = "⇡$count "
+behind = "⇣$count "
+diverged = "⇕⇡$ahead_count⇣$behind_count "
+
+# Chỉ hiện khi lệnh trước thất bại (✘ + mã thoát, hoặc tín hiệu như SIGINT)
+[status]
+disabled = false
+symbol = "✘"
+signal_symbol = "⚡"
+style = "fg:{{red}}"
+format = "[$symbol $common_meaning$signal_name$maybe_int]($style) "
+map_symbol = true
+
+[cmd_duration]
+min_time = 500
+style = "fg:{{yellow}}"
+format = "[\U000F051B $duration]($style) "
+
+[nodejs]
+symbol = " "
+style = "fg:{{muted}}"
+format = "[$symbol$version]($style) "
+
+[python]
+symbol = " "
+style = "fg:{{muted}}"
+format = "[$symbol$version]($style) "
+
+[lua]
+symbol = " "
+style = "fg:{{muted}}"
+format = "[$symbol$version]($style) "
+
+[dotnet]
+symbol = " "
+heuristic = false
+style = "fg:{{muted}}"
+format = "[$symbol$version]($style) "
+
+[docker_context]
+symbol = " "
+style = "fg:{{muted}}"
+format = "[$symbol$context]($style) "
+
+[username]
+show_always = false
+style_user = "fg:{{muted}}"
+style_root = "fg:{{red}}"
+format = "[$user]($style)"
+
+[hostname]
+ssh_only = true
+style = "fg:{{muted}}"
+format = "[@$hostname]($style) "

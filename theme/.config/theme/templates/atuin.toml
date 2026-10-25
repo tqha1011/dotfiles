@@ -1,0 +1,13 @@
+# Sinh tự động bởi theme-render.py — đừng sửa tay. config.toml chọn theme "palette"
+[theme]
+name = "palette"
+
+[colors]
+AlertInfo = "{{green}}"
+AlertWarn = "{{yellow}}"
+AlertError = "{{red}}"
+Annotation = "{{muted}}"
+Base = "{{fg}}"
+Guidance = "{{muted}}"
+Important = "{{accent}}"
+Title = "{{accent2}}"

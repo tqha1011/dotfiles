@@ -1,0 +1,42 @@
+# Sinh tự động bởi theme-render.py — đừng sửa tay. Màu file/icon giữ mặc định (ANSI theo bảng của Ghostty)
+[mgr]
+cwd = { fg = "{{cyan}}" }
+hovered = { fg = "{{fg}}", bg = "{{surface}}" }
+preview_hovered = { bg = "{{surface}}" }
+find_keyword = { fg = "{{yellow}}", bold = true }
+find_position = { fg = "{{accent2}}" }
+marker_selected = { fg = "{{green}}", bg = "{{green}}" }
+marker_copied = { fg = "{{yellow}}", bg = "{{yellow}}" }
+marker_cut = { fg = "{{red}}", bg = "{{red}}" }
+marker_marked = { fg = "{{cyan}}", bg = "{{cyan}}" }
+count_selected = { fg = "{{bg}}", bg = "{{green}}" }
+count_copied = { fg = "{{bg}}", bg = "{{yellow}}" }
+count_cut = { fg = "{{bg}}", bg = "{{red}}" }
+border_style = { fg = "{{border}}" }
+
+[tabs]
+active = { fg = "{{bg}}", bg = "{{accent}}", bold = true }
+inactive = { fg = "{{fg_dim}}", bg = "{{surface}}" }
+
+[mode]
+normal_main = { fg = "{{bg}}", bg = "{{accent}}", bold = true }
+normal_alt = { fg = "{{accent}}", bg = "{{surface}}" }
+select_main = { fg = "{{bg}}", bg = "{{green}}", bold = true }
+select_alt = { fg = "{{green}}", bg = "{{surface}}" }
+unset_main = { fg = "{{bg}}", bg = "{{accent2}}", bold = true }
+unset_alt = { fg = "{{accent2}}", bg = "{{surface}}" }
+
+[status]
+overall = { bg = "{{bg_alt}}" }
+perm_type = { fg = "{{accent}}" }
+perm_read = { fg = "{{yellow}}" }
+perm_write = { fg = "{{red}}" }
+perm_exec = { fg = "{{green}}" }
+perm_sep = { fg = "{{muted}}" }
+progress_label = { fg = "{{fg}}", bold = true }
+progress_normal = { fg = "{{accent}}", bg = "{{surface}}" }
+progress_error = { fg = "{{red}}", bg = "{{surface}}" }
+
+[input]
+border = { fg = "{{accent}}" }
+selected = { reversed = true }

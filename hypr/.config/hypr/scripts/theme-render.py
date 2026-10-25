@@ -11,6 +11,7 @@ Chỉ ghi file khi nội dung đổi. In ra danh sách file đã đổi (theme-m
 import hashlib
 import json
 import re
+import shutil
 import subprocess
 import sys
 import tomllib
@@ -28,7 +29,20 @@ OUTPUTS = {
     "hyprlock.conf": [HOME / ".config/hypr/colors-hyprlock.conf"],
     "ghostty": [HOME / ".config/ghostty/colors"],
     "palette.sh": [CACHE / "palette.sh"],
+    "starship.toml": [HOME / ".config/starship.toml"],
+    "fzf": [CACHE / "fzf"],
+    "zsh.zsh": [CACHE / "zsh.zsh"],
+    "eza.yml": [HOME / ".config/eza/theme.yml"],
+    "btop.theme": [HOME / ".config/btop/themes/palette.theme"],
+    "lazygit.yml": [HOME / ".config/lazygit/config.yml"],
+    "delta.gitconfig": [HOME / ".config/git/config"],
+    "zellij.kdl": [HOME / ".config/zellij/themes/palette.kdl"],
+    "atuin.toml": [HOME / ".config/atuin/themes/palette.toml"],
+    "yazi.toml": [HOME / ".config/yazi/theme.toml"],
 }
+
+# Template chỉ render khi lệnh này đã cài (core.pager = delta mà thiếu delta thì `git diff` hỏng)
+REQUIRES = {"delta.gitconfig": "delta"}
 
 # Token nào lấy từ role Material nào ở chế độ wallpaper (khớp chú thích [matugen] trong palettes.toml)
 MATUGEN_ROLES = {
@@ -76,10 +90,22 @@ def rgb(hex_color):
     return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
 
 
+def mix(a, b, t):
+    """Pha màu a với b: t = phần của b (0 → a, 1 → b)."""
+    return "#" + "".join(f"{round(x + (y - x) * t):02x}" for x, y in zip(rgb(a), rgb(b)))
+
+
+def with_dim_tokens(palette):
+    """Token <màu>_dim: màu pha 82% nền, dùng làm nền nhạt (diff đỏ/xanh của delta…)."""
+    for token in ("red", "green", "yellow", "accent", "accent2", "cyan"):
+        palette[f"{token}_dim"] = mix(palette[token], palette["bg"], 0.82)
+    return palette
+
+
 def load_palette(mode, wallpaper=None):
     palette = tomllib.loads((THEME / "palettes.toml").read_text())["tokyonight"]
     if mode == "tokyonight":
-        return palette
+        return with_dim_tokens(palette)
     # --prefer: wallpaper nhiều màu thì lấy màu rực nhất làm accent (không hỏi tương tác)
     # --fallback-color: wallpaper gần như xám (chainsaw-man) thì nghiêng về xanh TokyoNight
     out = subprocess.run(
@@ -93,7 +119,7 @@ def load_palette(mode, wallpaper=None):
         # matugen 2: {"dark": {"role": "#…"}}
         value = colors[role]["dark"] if role in colors else colors["dark"][role]
         palette[token] = value["color"] if isinstance(value, dict) else value
-    return palette
+    return with_dim_tokens(palette)
 
 
 def render(template, palette):
@@ -157,6 +183,8 @@ def main():
     palette = load_palette(mode, sys.argv[2] if len(sys.argv) > 2 else None)
     changed = []
     for name, targets in OUTPUTS.items():
+        if name in REQUIRES and not shutil.which(REQUIRES[name]):
+            continue
         content = render((THEME / "templates" / name).read_text(), palette)
         for target in targets:
             write(target, content, changed)

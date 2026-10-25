@@ -5,3 +5,5 @@ foreground = {{fg}}
 cursor-color = {{accent}}
 selection-background = {{surface}}
 selection-foreground = {{fg}}
+split-divider-color = {{border}}
+unfocused-split-fill = {{bg_dark}}

@@ -373,6 +373,7 @@ end
 -- Example special workspace (scratchpad)
 hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"))
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
+hl.bind(mainMod .. " + grave", hl.dsp.exec_cmd("~/.config/hypr/scripts/dropdown-term.sh"))
 
 -- Scroll through existing workspaces with mainMod + scroll
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
@@ -487,6 +488,17 @@ hl.window_rule({
 
     move  = "20 monitor_h-120",
     float = true,
+})
+
+-- Terminal thả xuống (SUPER+`): nổi, nằm trên cùng giữa màn hình, trong special workspace "term"
+hl.window_rule({
+    name      = "dropdown-term",
+    match     = { class = "^ghostty\\.dropdown$" },
+
+    float     = true,
+    size      = "monitor_w*0.7 monitor_h*0.55",
+    move      = "monitor_w*0.15 40",
+    workspace = "special:term",
 })
 
 -- Tiện ích hệ thống: nổi, cỡ vừa, giữa màn hình (thay vì chiếm nửa màn hình)

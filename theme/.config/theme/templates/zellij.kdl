@@ -1,0 +1,16 @@
+// Sinh tự động bởi theme-render.py — đừng sửa tay. config.kdl chọn theme "palette"
+themes {
+    palette {
+        fg "{{fg}}"
+        bg "{{bg}}"
+        black "{{bg_dark}}"
+        red "{{red}}"
+        green "{{green}}"
+        yellow "{{yellow}}"
+        blue "{{accent}}"
+        magenta "{{accent2}}"
+        cyan "{{cyan}}"
+        white "{{fg}}"
+        orange "{{orange}}"
+    }
+}
