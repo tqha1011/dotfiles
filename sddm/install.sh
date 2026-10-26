@@ -17,7 +17,11 @@ cp -r "$src"/. "$dest"/
 echo "Đã cài theme vào $dest"
 
 install -d /etc/sddm.conf.d
+# InputMethod rỗng: ghi đè 10-endeavouros.conf (qtvirtualkeyboard), bàn phím ảo che mất nút tắt máy/khởi động lại
 cat >/etc/sddm.conf.d/20-tokyonight.conf <<'EOF'
+[General]
+InputMethod=
+
 [Theme]
 Current=tokyonight
 CursorTheme=Bibata-Modern-Ice

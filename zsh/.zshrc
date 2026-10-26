@@ -37,7 +37,8 @@ export PATH=$PATH:/home/ha/.local/share/JetBrains/Toolbox/scripts
 FNM_PATH="/home/ha/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then
   export PATH="$FNM_PATH:$PATH"
-  eval "$(fnm env --shell zsh)"
+  # --use-on-cd: vào thư mục có .nvmrc / .node-version / engines trong package.json thì tự đổi phiên bản Node
+  eval "$(fnm env --use-on-cd --version-file-strategy=recursive --shell zsh)"
 fi
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -55,6 +56,11 @@ if command -v bat >/dev/null; then
   export MANROFFOPT=-c
 fi
 command -v zoxide >/dev/null && eval "$(zoxide init zsh --cmd cd)"
+# direnv: nạp .envrc khi vào thư mục (phải `direnv allow` mới chạy); tắt log "loading/unloading" cho yên
+if command -v direnv >/dev/null; then
+  export DIRENV_LOG_FORMAT=
+  eval "$(direnv hook zsh)"
+fi
 # atuin thay Ctrl-R bằng lịch sử có ngữ cảnh (thư mục, mã thoát, thời gian); giữ phím ↑ của zsh
 command -v atuin >/dev/null && eval "$(atuin init zsh --disable-up-arrow)"
 
@@ -90,3 +96,7 @@ _tp_line_finish() {
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd _tp_precmd
 zle -N zle-line-finish _tp_line_finish
+
+# Hàm và alias cho công việc dev: ~/.config/zsh/*.zsh (nav: pj/zp/o/ff/rgf, dev: git/gh/docker/ports/pg, notify: báo lệnh dài).
+# Nạp cuối cùng để notify.zsh đăng ký precmd sau starship (cần STARSHIP_CMD_STATUS).
+for _f in ~/.config/zsh/*.zsh(N); do source "$_f"; done; unset _f

@@ -40,6 +40,8 @@ dotfiles/
 │           ├── theme-mode                # Palette switch: tokyonight | wallpaper (SUPER+SHIFT+T)
 │           ├── theme-render.py           # Renders palette tokens into every app's color file
 │           ├── dropdown-term.sh          # Drop-down ghostty scratchpad (SUPER+`)
+│           ├── project-picker.sh         # Pick a repo under ~/Code: terminal + zellij (SUPER+O) or IDE (SUPER+SHIFT+O)
+│           ├── open-in-ide.sh            # Opens a path in IDEA / Rider / VS Code depending on the project
 │           ├── clipboard.sh              # Clipboard history via cliphist + rofi (SUPER+SHIFT+V)
 │           └── colorpick.sh              # hyprpicker + notification with a swatch (SUPER+SHIFT+C)
 │
@@ -92,10 +94,15 @@ dotfiles/
 │
 ├── zellij/
 │   └── .config/zellij/
-│       └── config.kdl                    # Terminal multiplexer (themes/palette.kdl is generated)
+│       ├── config.kdl                    # Terminal multiplexer (themes/palette.kdl is generated)
+│       └── layouts/dev.kdl               # shell / run / git tabs for a project session
 │
 ├── zsh/
-│   └── .zshrc                            # Shell config (oh-my-zsh, plugins, fzf, eza, bat, zoxide, starship)
+│   ├── .zshrc                            # Shell config (oh-my-zsh, plugins, fzf, eza, bat, zoxide, starship)
+│   └── .config/zsh/
+│       ├── nav.zsh                       # pj / zp / o / ff / rgf: jump between projects, search, open in IDE
+│       ├── dev.zsh                       # git, gh, docker, ports, Postgres helpers
+│       └── notify.zsh                    # Desktop notification when a long command finishes unfocused
 │
 ├── .stowrc                               # Stow target defaults to $HOME
 ├── .vscode/settings.json
@@ -125,6 +132,7 @@ sudo pacman -S --needed \
   fastfetch ghostty \
   stow zsh zsh-autosuggestions zsh-syntax-highlighting starship \
   fzf fd eza bat zoxide atuin zellij yazi btop lazygit git-delta \
+  direnv xh lazydocker pgcli tailspin \
   brightnessctl playerctl wireplumber pavucontrol networkmanager \
   imagemagick ttf-jetbrains-mono-nerd otf-font-awesome \
   awww hyprshot grim slurp wl-clipboard libnotify \
@@ -150,6 +158,11 @@ sudo pacman -S --needed \
 | `yazi` | Terminal file manager with image previews (`y`), themed through the palette |
 | `zellij` | Terminal multiplexer, `zj` attaches/creates the `main` session |
 | `btop` | System monitor, themed through `~/.config/btop/themes/palette.theme` |
+| `direnv` | Loads `.envrc` per project directory (needs `direnv allow`) |
+| `xh` | `http` / `https` commands for calling APIs |
+| `lazydocker` | Docker TUI (`lzd`) |
+| `pgcli` | Postgres client used by `pgsh` (falls back to `psql` inside the container) |
+| `tailspin` | Highlights logs piped through `tspin` (used by `dlogs`) |
 | `lazygit` + `git-delta` | Git TUI and diff pager (`lg`); delta only gets wired into git once it is installed |
 | `brightnessctl` | Laptop brightness keybinds |
 | `playerctl` | Media key bindings |

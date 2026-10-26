@@ -421,6 +421,9 @@ hl.bind(mainMod .. " + CTRL + N", hl.dsp.exec_cmd("dunstctl set-paused toggle"))
 
 -- Tiện ích: lịch sử clipboard, hút màu
 hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("~/.config/hypr/scripts/clipboard.sh"))
+-- Dự án trong ~/Code: SUPER+O mở terminal + zellij, SUPER+SHIFT+O mở bằng IDE
+hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("~/.config/hypr/scripts/project-picker.sh"))
+hl.bind(mainMod .. " + SHIFT + O", hl.dsp.exec_cmd("~/.config/hypr/scripts/project-picker.sh ide"))
 hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd("~/.config/hypr/scripts/colorpick.sh"))
 
 -- Bảng màu: TokyoNight ↔ theo wallpaper
