@@ -102,6 +102,8 @@ dotfiles/
 │   └── .config/zsh/
 │       ├── nav.zsh                       # pj / zp / o / ff / rgf: jump between projects, search, open in IDE
 │       ├── dev.zsh                       # git, gh, docker, ports, Postgres helpers
+│       ├── cheat.zsh                     # cheat / Ctrl-G: fzf lookup of docker, curl, jq and common Linux commands (data in cheatsheet.txt)
+│       ├── cheatsheet.txt                # One entry per line: group :: description :: command
 │       └── notify.zsh                    # Desktop notification when a long command finishes unfocused
 │
 ├── .stowrc                               # Stow target defaults to $HOME

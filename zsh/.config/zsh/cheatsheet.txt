@@ -1,0 +1,191 @@
+# Cheatsheet cho `cheat` / Ctrl-G (xem cheat.zsh). Mỗi dòng: nhóm :: mô tả :: lệnh
+# Dòng bắt đầu bằng # và dòng trống bị bỏ qua. Thêm mục mới chỉ cần thêm một dòng ở đây.
+
+# ── docker: log, shell, trạng thái ──
+docker :: Xem log theo thời gian thực, 100 dòng cuối, có timestamp :: docker logs -f --tail 100 -t <container>
+docker :: Log trong 10 phút gần đây :: docker logs --since 10m <container>
+docker :: Vào shell trong container đang chạy :: docker exec -it <container> sh
+docker :: Chạy shell tạm trong một image (xoá khi thoát) :: docker run --rm -it <image> sh
+docker :: Danh sách container, kể cả đã dừng :: docker ps -a
+docker :: Danh sách container gọn (tên, trạng thái, port) :: docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
+docker :: Container thoát vì sao: exit code và có bị OOM kill không :: docker inspect -f '{{.State.ExitCode}} OOM={{.State.OOMKilled}}' <container>
+docker :: Trạng thái và healthcheck của container :: docker inspect <container> | jq '.[0].State'
+docker :: IP của container :: docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container>
+docker :: Biến môi trường của container :: docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' <container>
+docker :: Port đã map của container :: docker port <container>
+docker :: CPU / RAM của các container (một lần) :: docker stats --no-stream
+docker :: Tiến trình đang chạy trong container :: docker top <container>
+docker :: File đã thay đổi trong container so với image :: docker diff <container>
+docker :: Sự kiện docker trong 10 phút gần đây :: docker events --since 10m
+docker :: Copy file từ container ra máy :: docker cp <container>:/duong/dan ./
+docker :: Copy file từ máy vào container :: docker cp ./file <container>:/duong/dan
+docker :: Khởi động lại container :: docker restart <container>
+docker :: Xoá container (kể cả đang chạy) :: docker rm -f <container>
+
+# ── docker: image, network, volume, dọn dẹp ──
+docker :: Build image :: docker build -t <ten>:<tag> .
+docker :: Build in toàn bộ log, không cache (tìm lỗi build) :: docker build --progress=plain --no-cache .
+docker :: Danh sách image :: docker images
+docker :: Dung lượng docker đang chiếm :: docker system df
+docker :: Xoá image dangling :: docker image prune -f
+docker :: Dọn rác: container dừng, network thừa, image dangling :: docker system prune
+docker :: Danh sách network :: docker network ls
+docker :: Container nào đang nằm trong một network :: docker network inspect <network> | jq '.[0].Containers'
+docker :: Danh sách volume :: docker volume ls
+
+# ── docker compose ──
+compose :: Trạng thái các service :: docker compose ps
+compose :: Log của một service, theo thời gian thực :: docker compose logs -f --tail 100 <service>
+compose :: Chạy nền, build lại nếu cần :: docker compose up -d --build
+compose :: Vào shell của một service :: docker compose exec <service> sh
+compose :: Chạy lệnh một lần trong service mới (xoá khi xong) :: docker compose run --rm <service> sh
+compose :: Xem config đã gộp và thay biến .env :: docker compose config
+compose :: Dừng và xoá container, network, cả volume :: docker compose down -v
+compose :: Kéo image mới :: docker compose pull
+
+# ── curl: xem phản hồi ──
+curl :: Xem cả header và body :: curl -i <url>
+curl :: Chỉ xem header :: curl -I <url>
+curl :: Chi tiết kết nối, TLS, request/response header :: curl -v <url>
+curl :: Im lặng nhưng vẫn báo lỗi :: curl -sS <url>
+curl :: Lấy JSON và format đẹp :: curl -sS -H 'Accept: application/json' <url> | jq
+curl :: Chỉ lấy HTTP status code :: curl -o /dev/null -sS -w '%{http_code}\n' <url>
+curl :: Đi theo redirect :: curl -L <url>
+curl :: Lỗi HTTP 4xx/5xx thì trả exit code khác 0 :: curl -f <url>
+curl :: Đo thời gian: DNS, connect, TLS, byte đầu tiên, tổng :: curl -o /dev/null -sS -w 'dns %{time_namelookup}  connect %{time_connect}  tls %{time_appconnect}  ttfb %{time_starttransfer}  total %{time_total}\n' <url>
+curl :: Đặt timeout kết nối và tổng :: curl --connect-timeout 5 --max-time 20 <url>
+curl :: Thử lại khi lỗi :: curl --retry 3 <url>
+
+# ── curl: gửi dữ liệu và xác thực ──
+curl :: POST JSON :: curl -X POST -H 'Content-Type: application/json' -d '{"key":"value"}' <url>
+curl :: POST JSON lấy từ file :: curl -X POST -H 'Content-Type: application/json' -d @body.json <url>
+curl :: PUT / PATCH / DELETE :: curl -X DELETE <url>
+curl :: Gửi form urlencoded :: curl -d 'a=1' --data-urlencode 'q=hello world' <url>
+curl :: Upload file (multipart form) :: curl -F 'file=@./anh.png' -F 'name=abc' <url>
+curl :: Gửi Bearer token :: curl -H "Authorization: Bearer $TOKEN" <url>
+curl :: Basic auth :: curl -u user:pass <url>
+curl :: Gửi header tuỳ ý :: curl -H 'X-Request-Id: 123' <url>
+curl :: Gửi cookie :: curl -b 'session=abc' <url>
+curl :: Lưu và dùng lại cookie (đăng nhập xong gọi tiếp) :: curl -c jar.txt -b jar.txt <url>
+curl :: Thử CORS preflight :: curl -i -X OPTIONS -H 'Origin: http://localhost:3000' -H 'Access-Control-Request-Method: POST' <url>
+
+# ── curl: mạng và tải file ──
+curl :: Bỏ qua kiểm tra chứng chỉ TLS (chỉ dùng khi debug) :: curl -k <url>
+curl :: Ép host về IP khác, không sửa /etc/hosts :: curl --resolve <host>:443:127.0.0.1 https://<host>/
+curl :: Gọi thẳng IP nhưng giả Host header :: curl -H 'Host: <host>' http://<ip>/
+curl :: Đi qua proxy :: curl -x http://<host>:<port> <url>
+curl :: Ép HTTP/1.1 hoặc HTTP/2 :: curl --http1.1 -I <url>
+curl :: Tải file giữ nguyên tên :: curl -fLO <url>
+curl :: Tải file, lưu tên khác :: curl -fL -o <ten-file> <url>
+curl :: Tải tiếp file bị dừng giữa chừng :: curl -C - -O <url>
+
+# ── xh (httpie viết bằng Rust, đã cài) ──
+xh :: GET, in header và body có màu :: xh <url>
+xh :: POST JSON: key=value là chuỗi, key:=1 là số/bool :: xh POST <url> name=ha age:=30
+xh :: In cả request lẫn response :: xh -v <url>
+xh :: Gửi header và Bearer token :: xh <url> 'Authorization:Bearer <token>'
+xh :: Chỉ in header của response :: xh -h <url>
+
+# ── jq ──
+jq :: Format đẹp :: jq .
+jq :: Lấy một trường trong mảng, bỏ dấu ngoặc kép :: jq -r '.items[].name'
+jq :: Liệt kê các key :: jq 'keys'
+jq :: Đếm phần tử :: jq 'length'
+jq :: Lọc phần tử theo điều kiện :: jq '.[] | select(.status == "error")'
+jq :: Chỉ lấy vài trường :: jq 'map({id, name})'
+jq :: In mỗi phần tử một dòng (hợp với grep) :: jq -c '.[]'
+jq :: Sắp xếp key (để diff hai JSON) :: jq -S .
+
+# ── mạng: kiểm tra port, DNS, TLS ──
+net :: Cổng nào đang lắng nghe và tiến trình nào giữ :: ss -tulpn
+net :: Tiến trình nào đang dùng port 8080 :: lsof -i :8080
+net :: Thử mở kết nối TCP tới host:port :: nc -zv <host> <port>
+net :: Tra DNS ngắn gọn :: dig +short <host>
+net :: Xem chứng chỉ TLS của server :: openssl s_client -connect <host>:443 -servername <host> </dev/null | openssl x509 -noout -subject -issuer -dates
+net :: IP và interface của máy :: ip -br a
+
+# ── linux: tìm file và nội dung ──
+find :: Tìm file theo tên (fd, bỏ qua .git) :: fd <ten> [thu-muc]
+find :: Tìm file theo đuôi :: fd -e log
+find :: Tìm file sửa trong 1 giờ qua :: fd --changed-within 1h
+find :: Tìm file to hơn 100MB :: fd -S +100m
+find :: Tìm chuỗi trong nội dung file (ripgrep) :: rg 'chuoi' [thu-muc]
+find :: Tìm chuỗi, chỉ liệt kê tên file :: rg -l 'chuoi'
+find :: Tìm chuỗi kèm 3 dòng trước/sau :: rg -C 3 'chuoi'
+find :: Tìm chuỗi trong cả file bị gitignore :: rg --no-ignore --hidden 'chuoi'
+find :: Tìm lệnh nằm ở đâu :: command -v <lenh>
+
+# ── linux: xử lý text ──
+text :: Xem file dài, có màu và số dòng :: bat <file>
+text :: Theo dõi file log đang ghi thêm :: tail -f <file>
+text :: Đếm dòng :: wc -l <file>
+text :: Lấy cột thứ 2 của mỗi dòng :: awk '{print $2}' <file>
+text :: Thay chuỗi trong file (sửa tại chỗ) :: sed -i 's/cu/moi/g' <file>
+text :: Sắp xếp rồi đếm số lần xuất hiện, nhiều nhất trước :: sort <file> | uniq -c | sort -rn
+text :: Chạy lệnh cho từng dòng đầu vào :: <lenh> | xargs -I{} echo {}
+text :: So sánh hai file :: diff -u <a> <b>
+text :: Hai file giống nhau không (so hash) :: sha256sum <a> <b>
+
+# ── linux: file, thư mục, quyền ──
+file :: Danh sách file chi tiết, có git status :: ll
+file :: Dung lượng từng thư mục con, lớn nhất trước :: du -h --max-depth=1 | sort -rh
+file :: Dung lượng các ổ đĩa :: df -h
+file :: Xem cây thư mục 2 cấp :: lt
+file :: Đổi quyền thực thi :: chmod +x <file>
+file :: Đổi chủ sở hữu, cả thư mục con :: sudo chown -R $USER:$USER <thu-muc>
+file :: Tạo symlink :: ln -s <dich> <ten-link>
+file :: Copy cả thư mục, giữ quyền, có tiến độ :: rsync -avh --progress <nguon>/ <dich>/
+file :: Xoá an toàn hơn rm (đưa vào thùng rác) :: gio trash <file>
+
+# ── linux: nén và giải nén ──
+tar :: Nén thư mục thành .tar.gz :: tar -czf <ten>.tar.gz <thu-muc>
+tar :: Giải nén .tar.gz :: tar -xzf <file>.tar.gz
+tar :: Giải nén ra thư mục chỉ định :: tar -xzf <file>.tar.gz -C <thu-muc>
+tar :: Xem nội dung .tar.gz không giải nén :: tar -tzf <file>.tar.gz
+tar :: Nén / giải nén zip :: zip -r <ten>.zip <thu-muc> ; unzip <file>.zip
+
+# ── linux: tiến trình ──
+proc :: Xem tiến trình, sắp xếp đẹp (btop) :: btop
+proc :: Tìm tiến trình theo tên :: pgrep -af <ten>
+proc :: Tắt tiến trình theo PID (êm), -9 là ép :: kill <pid>
+proc :: Tắt tiến trình theo tên :: pkill <ten>
+proc :: Ai đang giữ port 3000, rồi tắt nó :: kill $(lsof -t -i :3000)
+proc :: Chạy nền, thoát terminal vẫn chạy :: nohup <lenh> > out.log 2>&1 &
+proc :: RAM đang dùng :: free -h
+
+# ── linux: systemd và log ──
+systemd :: Trạng thái một service :: systemctl status <service>
+systemd :: Khởi động / dừng / khởi động lại service :: sudo systemctl restart <service>
+systemd :: Bật service tự chạy khi boot và chạy luôn :: sudo systemctl enable --now <service>
+systemd :: Các service bị lỗi :: systemctl --failed
+systemd :: Log của service, theo thời gian thực :: journalctl -u <service> -f
+systemd :: Log của service từ lần boot này :: journalctl -u <service> -b
+systemd :: Log lỗi từ lần boot này :: journalctl -b -p err
+systemd :: Service của user (không cần sudo) :: systemctl --user status <service>
+
+# ── linux: gói trên Arch (pacman / yay) ──
+pacman :: Cập nhật toàn hệ thống :: sudo pacman -Syu
+pacman :: Cài gói :: sudo pacman -S <goi>
+pacman :: Tìm gói trong repo :: pacman -Ss <tu-khoa>
+pacman :: Gỡ gói và phần phụ thuộc không dùng nữa :: sudo pacman -Rns <goi>
+pacman :: Gói đã cài chứa file nào :: pacman -Ql <goi>
+pacman :: File này thuộc gói nào :: pacman -Qo <duong-dan>
+pacman :: Thông tin gói đã cài :: pacman -Qi <goi>
+pacman :: Gói mồ côi (không ai cần) :: pacman -Qdt
+pacman :: Cài / cập nhật gói AUR :: yay -S <goi>
+
+# ── linux: ssh và truyền file ──
+ssh :: Kết nối :: ssh <user>@<host>
+ssh :: Kết nối với cổng và khoá riêng :: ssh -p <port> -i ~/.ssh/<khoa> <user>@<host>
+ssh :: Chuyển tiếp port: mở localhost:8080 trỏ tới port 80 trên server :: ssh -L 8080:localhost:80 <user>@<host>
+ssh :: Copy file lên server :: scp <file> <user>@<host>:<thu-muc>
+ssh :: Đồng bộ thư mục lên server :: rsync -avzh --progress <thu-muc>/ <user>@<host>:<thu-muc>/
+ssh :: Tạo khoá ssh mới :: ssh-keygen -t ed25519 -C "<email>"
+ssh :: Đưa khoá công khai lên server :: ssh-copy-id <user>@<host>
+
+# ── linux: mạng ──
+net :: Ping vài lần :: ping -c 4 <host>
+net :: IP công khai của máy :: curl -s ifconfig.me
+net :: Đường đi tới host :: tracepath <host>
+net :: Wifi: danh sách mạng và kết nối :: nmcli device wifi list ; nmcli device wifi connect <ssid> --ask
+net :: Tải file kèm tiến độ :: curl -fLO <url>
