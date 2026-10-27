@@ -196,6 +196,14 @@ yay -S --needed \
 | `brave-bin` | Browser autostarted on login |
 | `bibata-cursor-theme-bin` | Cursor (Bibata-Modern-Ice) for Hyprland, GTK, Qt and SDDM |
 
+### posting (installed with `uv`, not a pacman/AUR package)
+
+Terminal HTTP client for testing APIs (requests, headers, bodies and environments in a TUI). It has no config in this repo; collections live wherever you start it:
+
+```bash
+uv tool install posting
+```
+
 ### oh-my-zsh (not a pacman/AUR package)
 
 `.zshrc` expects oh-my-zsh to already be installed, plus the `fzf-tab` plugin (Tab completion menu through fzf):
