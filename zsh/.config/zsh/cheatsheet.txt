@@ -96,6 +96,55 @@ jq :: Chỉ lấy vài trường :: jq 'map({id, name})'
 jq :: In mỗi phần tử một dòng (hợp với grep) :: jq -c '.[]'
 jq :: Sắp xếp key (để diff hai JSON) :: jq -S .
 
+# ── java: biên dịch, chạy, đóng gói ──
+java :: Xem phiên bản java và javac :: java -version ; javac -version
+java :: Biên dịch một file :: javac Main.java
+java :: Chạy class đã biên dịch :: java Main
+java :: Chạy thẳng file source, không cần javac (Java 11+) :: java Main.java
+java :: Biên dịch cả cây source ra thư mục out :: javac -d out $(fd -e java . src)
+java :: Chạy với classpath (thư mục class + thư viện) :: java -cp 'out:lib/*' com.example.Main
+java :: Chạy file jar :: java -jar app.jar
+java :: Tạo jar chạy được từ thư mục out :: jar cfe app.jar com.example.Main -C out .
+java :: Xem nội dung jar :: jar tf app.jar
+java :: Giải nén jar :: jar xf app.jar
+java :: Dịch ngược class ra bytecode (kể cả private) :: javap -c -p <Class>
+java :: Mở REPL thử code nhanh :: jshell
+java :: Truyền system property cho chương trình :: java -Dkey=value -jar app.jar
+java :: Đặt heap nhỏ nhất / lớn nhất :: java -Xms256m -Xmx1g -jar app.jar
+
+# ── java: debug, chẩn đoán JVM ──
+java :: Chạy cho phép debug từ xa (IDE attach vào port 5005) :: java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar app.jar
+java :: Tự dump heap khi hết bộ nhớ (OOM) :: java -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./dump.hprof -jar app.jar
+java :: In log GC :: java -Xlog:gc* -jar app.jar
+java :: Ghi Flight Recorder 60 giây :: java -XX:StartFlightRecording=duration=60s,filename=rec.jfr -jar app.jar
+java :: Liệt kê các JVM đang chạy (PID, class, tham số) :: jps -lv
+java :: Thread dump (tìm deadlock, thread bị kẹt) :: jstack <pid>
+java :: Dump heap của tiến trình đang chạy :: jmap -dump:live,format=b,file=heap.hprof <pid>
+java :: 20 class chiếm nhiều object nhất :: jmap -histo:live <pid> | head -20
+java :: Xem các cờ JVM đang bật :: jcmd <pid> VM.flags
+java :: Tình trạng heap hiện tại :: jcmd <pid> GC.heap_info
+
+# ── java: JDK trên Arch và keystore ──
+java :: Danh sách JDK đã cài và JDK mặc định :: archlinux-java status
+java :: Đổi JDK mặc định :: sudo archlinux-java set java-21-openjdk
+java :: JAVA_HOME thực sự của java đang dùng :: dirname $(dirname $(readlink -f $(which java)))
+java :: Xem nội dung keystore :: keytool -list -v -keystore <file>.jks
+java :: Tạo keystore chứa cặp khoá RSA :: keytool -genkeypair -alias <alias> -keyalg RSA -keysize 2048 -validity 365 -keystore <file>.jks
+
+# ── gradle ──
+gradle :: Build toàn bộ (biên dịch + test) :: gradle build
+gradle :: Dọn rồi build lại :: gradle clean build
+gradle :: Build bỏ qua test :: gradle build -x test
+gradle :: Chạy test :: gradle test
+gradle :: Chạy một test class hoặc một method :: gradle test --tests '<Class>.<method>'
+gradle :: Danh sách task có sẵn :: gradle tasks
+gradle :: Cây dependency :: gradle dependencies
+gradle :: Vì sao một dependency có mặt, bản nào :: gradle dependencyInsight --dependency <ten>
+gradle :: Tải lại dependency (bỏ cache) :: gradle build --refresh-dependencies
+gradle :: In stacktrace và log chi tiết khi build lỗi :: gradle build --stacktrace --info
+gradle :: Tạo gradle wrapper (gradlew) cho project :: gradle wrapper
+gradle :: Tắt các Gradle daemon đang chạy :: gradle --stop
+
 # ── mạng: kiểm tra port, DNS, TLS ──
 net :: Cổng nào đang lắng nghe và tiến trình nào giữ :: ss -tulpn
 net :: Tiến trình nào đang dùng port 8080 :: lsof -i :8080
